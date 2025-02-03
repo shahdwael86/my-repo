@@ -1,148 +1,202 @@
 import 'package:flutter/material.dart';
-//import 'package:road_helperr/provider/settings_provider.dart';
-import 'package:road_helperr/ui/public_details/input_field.dart';
-import 'package:road_helperr/ui/public_details/main_button.dart';
-import 'package:road_helperr/ui/public_details/or_border.dart';
+import 'package:road_helperr/ui/public_details/input_field.dart' as INp;
+import 'package:road_helperr/ui/public_details/main_button.dart' as bum;
+import 'package:road_helperr/ui/public_details/or_border.dart' as or_bbr;
 import 'package:road_helperr/ui/screens/otp_screen.dart';
 import 'package:road_helperr/ui/screens/signin_screen.dart';
-import 'package:road_helperr/utils/app_colors.dart';
+import 'package:road_helperr/utils/app_colors.dart' as colo;
 import 'package:road_helperr/utils/text_strings.dart';
 
-class ValidationForm extends StatelessWidget {
+class ValidationForm extends StatefulWidget {
   ValidationForm({super.key});
 
+  @override
+  _ValidationFormState createState() => _ValidationFormState();
+}
+
+class _ValidationFormState extends State<ValidationForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  final TextEditingController firstNameController = TextEditingController();
+  final FocusNode firstNameFocusNode = FocusNode();
+
+  final TextEditingController lastNameController = TextEditingController();
+  final FocusNode lastNameFocusNode = FocusNode();
+
+  final TextEditingController phoneController = TextEditingController();
+  final FocusNode phoneFocusNode = FocusNode();
+
+  final TextEditingController emailController = TextEditingController();
+  final FocusNode emailFocusNode = FocusNode();
+
+  final TextEditingController passwordController = TextEditingController();
+  final FocusNode passwordFocusNode = FocusNode();
+
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
+  final FocusNode confirmPasswordFocusNode = FocusNode();
+
+  @override
+  void dispose() {
+    firstNameController.dispose();
+    firstNameFocusNode.dispose();
+
+    lastNameController.dispose();
+    lastNameFocusNode.dispose();
+
+    phoneController.dispose();
+    phoneFocusNode.dispose();
+
+    emailController.dispose();
+    emailFocusNode.dispose();
+
+    passwordController.dispose();
+    passwordFocusNode.dispose();
+
+    confirmPasswordController.dispose();
+    confirmPasswordFocusNode.dispose();
+
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 10, top: 300),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
       child: Form(
         key: _formKey,
         child: SingleChildScrollView(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              InputField(
+              INp.InputField(
                 icon: Icons.person,
                 label: "First Name",
                 hintText: 'First name',
                 validatorIsContinue: (text) {
-                  if (text.length < 10) {
-                    return "At least 10 characters";
+                  if (text!.isEmpty || text!.length < 3) {
+                    return "At least 3 characters";
                   }
                   return null;
                 },
+                controller: firstNameController,
+                focusNode: firstNameFocusNode,
               ),
-              // const SizedBox(height: 1),
-              InputField(
+              const SizedBox(height: 10),
+              INp.InputField(
                 icon: Icons.person,
                 label: "Last Name",
                 hintText: 'Last name',
                 validatorIsContinue: (text) {
-                  if (text.length < 10) {
-                    return "At least 10 characters";
+                  if (text!.isEmpty || text!.length < 3) {
+                    return "At least 3 characters";
+                  }
+                  return null;
+                },
+                controller: lastNameController,
+                focusNode: lastNameFocusNode,
+              ),
+              const SizedBox(height: 10),
+              INp.InputField(
+                icon: Icons.phone,
+                label: "Phone Number",
+                hintText: 'Phone',
+                keyboardType: TextInputType.number,
+                controller: phoneController,
+                focusNode: phoneFocusNode,
+                validatorIsContinue: (phoneText) {
+                  if (phoneText?.length != 11 ||
+                      !RegExp(r'^[0-9]+').hasMatch(phoneText!)) {
+                    return "Must be exactly 11 digits";
                   }
                   return null;
                 },
               ),
-              //const SizedBox(height: 1),
-              InputField(
-                  icon: Icons.phone,
-                  label: "Phone Number",
-                  hintText: 'phone',
-                  validatorIsContinue: (phoneText) {
-                    if (phoneText.length < 11) {
-                      return "Must be 11 digits";
-                    }
-                    return null;
-                  }),
-              const SizedBox(height: 1),
-              InputField(
+              const SizedBox(height: 10),
+              INp.InputField(
                 icon: Icons.email_outlined,
                 label: "Email",
-                hintText: 'email',
+                hintText: 'Email',
                 validatorIsContinue: (emailText) {
                   final regExp = RegExp(
-                      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
-                  if (!regExp.hasMatch(emailText)) {
-                    return "Email is not valid";
+                      r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}");
+                  if (!regExp.hasMatch(emailText!)) {
+                    return "Invalid email format";
                   }
                   return null;
                 },
+                controller: emailController,
+                focusNode: emailFocusNode,
               ),
-              const SizedBox(height: 1),
-              InputField(
+              const SizedBox(height: 10),
+              INp.InputField(
                 icon: Icons.lock,
+                hintText: "Enter your password",
                 label: "Password",
-                hintText: 'password',
                 isPassword: true,
-                validatorIsContinue: (confirmPasswordText) {
-                  final regExpCon = RegExp(
-                      r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$');
-                  if (!regExpCon.hasMatch(confirmPasswordText)) {
-                    return "Password Must be at least 8 characters in length "
-                        "should contain at least one Special character"
-                        "should contain at least one digit"
-                        "should contain at least one lower case"
-                        "should contain at least one upper case";
+                controller: passwordController,
+                focusNode: passwordFocusNode,
+                validatorIsContinue: (passwordText) {
+                  if (passwordText == null || passwordText.isEmpty) {
+                    return "Please enter your password";
+                  }
+                  if (passwordText.length < 8) {
+                    return "Password must be at least 8 characters";
                   }
                   return null;
                 },
               ),
-              const SizedBox(height: 1),
-              InputField(
+              const SizedBox(height: 10),
+              INp.InputField(
                 icon: Icons.lock,
                 label: "Confirm Password",
-                hintText: 'confirm password',
+                hintText: 'Confirm password',
                 isPassword: true,
                 validatorIsContinue: (confirmPasswordText) {
-                  final regExpCon = RegExp(
-                      r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$');
-                  if (!regExpCon.hasMatch(confirmPasswordText)) {
-                    return "must be identical to the password";
+                  if (confirmPasswordText != passwordController.text) {
+                    return "Passwords do not match";
                   }
                   return null;
                 },
+                controller: confirmPasswordController,
+                focusNode: confirmPasswordFocusNode,
               ),
-              const SizedBox(height: 5),
-              MainButton(
-                  textButton: TextStrings.textButton,
-                  onPress: () {
+              const SizedBox(height: 20),
+              bum.MainButton(
+                textButton: TextStrings.textButton,
+                onPress: () {
+                  if (_formKey.currentState!.validate()) {
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => OtpScreen()),
                     );
-                    if (_formKey.currentState!.validate()) {
-                      print("Hello SignUp");
-                    }
-                  }),
-              const SizedBox(height: 1),
-              const OrBorder(),
-              Padding(
-                padding: const EdgeInsets.only(left: 88, right: 30),
-                child: Row(
-                  children: [
-                    Text(
-                      TextStrings.textToSignUp,
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleMedium!
-                          .copyWith(color: AppColors.borderField),
+                  }
+                },
+              ),
+              const SizedBox(height: 20),
+              const or_bbr.OrBorder(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    TextStrings.textToSignUp,
+                    style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                          color: colo.AppColors.borderField,
+                        ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pushNamed(SignInScreen.routeName);
+                    },
+                    child: Text(
+                      TextStrings.logIn,
+                      style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                            color: colo.AppColors.signAndRegister,
+                          ),
                     ),
-                    TextButton(
-                        onPressed: () {
-                          Navigator.of(context)
-                              .pushNamed(SignInScreen.routeName);
-                        },
-                        child: Text(
-                          TextStrings.logIn,
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyLarge!
-                              .copyWith(color: AppColors.signAndRegister),
-                        ))
-                  ],
-                ),
-              )
+                  ),
+                ],
+              ),
             ],
           ),
         ),

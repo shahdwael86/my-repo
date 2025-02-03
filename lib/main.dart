@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:road_helperr/ui/screens/ai_chat.dart';
 import 'package:road_helperr/ui/screens/ai_welcome_screen.dart';
 import 'package:road_helperr/ui/screens/bottomnavigationbar_screes/home_screen.dart';
@@ -6,6 +7,7 @@ import 'package:road_helperr/ui/screens/bottomnavigationbar_screes/map_screen.da
 import 'package:road_helperr/ui/screens/bottomnavigationbar_screes/notification_screen.dart';
 import 'package:road_helperr/ui/screens/bottomnavigationbar_screes/profile_screen.dart';
 import 'package:road_helperr/ui/screens/edit_profile_screen.dart';
+import 'package:road_helperr/ui/screens/email_screen.dart';
 import 'package:road_helperr/ui/screens/on_boarding.dart';
 import 'package:road_helperr/ui/screens/onboarding.dart';
 import 'package:road_helperr/ui/screens/otp_expired_screen.dart';
@@ -13,24 +15,61 @@ import 'package:road_helperr/ui/screens/otp_screen.dart';
 import 'package:road_helperr/ui/screens/profile_screen.dart';
 import 'package:road_helperr/ui/screens/signin_screen.dart';
 import 'package:road_helperr/ui/screens/signupScreen.dart';
+import 'utils/location_service.dart'; // Import the location service
 
 void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
-  get email => null;
+  @override
+  _MyAppState createState() => _MyAppState();
+}
 
-  // This widget is the root of your application.
+class _MyAppState extends State<MyApp> {
+  final LocationService _locationService = LocationService();
+  late Stream<Position> _positionStream;
+
+  @override
+  void initState() {
+    super.initState();
+    _positionStream = _locationService.positionStream;
+    _checkLocation();
+  }
+
+  Future<void> _checkLocation() async {
+    await _locationService.checkLocationPermission();
+    bool isLocationEnabled = await _locationService.isLocationServiceEnabled();
+    if (!isLocationEnabled) {
+      _showLocationDisabledMessage();
+    }
+  }
+
+  void _showLocationDisabledMessage() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Location Required'),
+        content: Text('Please enable location services to continue.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text('OK'),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
+      title: 'ٌRoad Helper App',
       theme: ThemeData(
-        scaffoldBackgroundColor: Color(0xFF1F3551),
+        scaffoldBackgroundColor: const Color(0xFF1F3551),
         cardTheme: CardTheme(
           color: const Color(0xFF01122A),
           surfaceTintColor: const Color(0xFF01122A),
@@ -40,34 +79,32 @@ class MyApp extends StatelessWidget {
           ),
         ),
         colorScheme: ColorScheme.fromSeed(
-          seedColor: Color(0xFF1F3551),
-          primary: Color(0xFF01122A),
-          secondary: Color(0xFF023A87),
-          onPrimary: Color(0xFFFFFFFF),
-          onSecondary: Color(0xFFFFFFFF),
+          seedColor: const Color(0xFF1F3551),
+          primary: const Color(0xFF01122A),
+          secondary: const Color(0xFF023A87),
+          onPrimary: const Color(0xFFFFFFFF),
+          onSecondary: const Color(0xFFFFFFFF),
         ),
         useMaterial3: true,
       ),
       routes: {
-        SignupScreen.routeName: (context) => SignupScreen(),
-        SignInScreen.routeName: (context) => SignInScreen(),
-        AiWelcomeScreen.routeName: (context) => AiWelcomeScreen(),
-        AiChat.routeName: (context) => AiChat(),
-        HomeScreen.routeName: (context) => HomeScreen(),
-        MapScreen.routeName: (context) => MapScreen(),
-        NotificationScreen.routeName: (context) => NotificationScreen(),
-        ProfileScreen.routeName: (context) => ProfileScreen(),
+        SignupScreen.routeName: (context) => const SignupScreen(),
+        SignInScreen.routeName: (context) => const SignInScreen(),
+        AiWelcomeScreen.routeName: (context) => const AiWelcomeScreen(),
+        AiChat.routeName: (context) => const AiChat(),
+        HomeScreen.routeName: (context) => const HomeScreen(),
+        MapScreen.routeName: (context) => const MapScreen(),
+        NotificationScreen.routeName: (context) => const NotificationScreen(),
+        ProfileScreen.routeName: (context) => const ProfileScreen(),
         OtpScreen.routeName: (context) => OtpScreen(),
-        OnBoarding.routeName: (context) => OnBoarding(),
-        OnboardingScreen.routeName: (context) => OnboardingScreen(),
-        OtpExpiredScreen.routeName: (context) => OtpExpiredScreen(),
-        PersonScreen.routeName: (context) => PersonScreen(),
-        EditProfileScreen.routeName: (context) => EditProfileScreen(),
+        OnBoarding.routeName: (context) => const OnBoarding(),
+        OnboardingScreen.routeName: (context) => const OnboardingScreen(),
+        OtpExpiredScreen.routeName: (context) => const OtpExpiredScreen(),
+        PersonScreen.routeName: (context) => const PersonScreen(),
+        EditProfileScreen.routeName: (context) => const EditProfileScreen(),
+        EmailScreen.routeName: (context) => const EmailScreen()
       },
-
       initialRoute: OnboardingScreen.routeName,
-      //initialRoute: AiWelcomeScreen.routeName,
-      //initialRoute: SignupScreen.routeName,
     );
   }
 }

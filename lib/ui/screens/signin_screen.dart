@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:road_helperr/ui/public_details/input_field.dart';
 import 'package:road_helperr/ui/public_details/main_button.dart';
 import 'package:road_helperr/ui/public_details/or_border.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:road_helperr/ui/screens/bottomnavigationbar_screes/home_screen.dart';
 import 'package:road_helperr/ui/screens/email_screen.dart';
 import 'package:road_helperr/ui/screens/signupScreen.dart';
-import 'package:road_helperr/utils/text_strings.dart';
-
-import '../../utils/app_colors.dart';
 
 class SignInScreen extends StatefulWidget {
-  static const String routeName = "signipscreen";
-  SignInScreen({super.key});
+  static const String routeName = "signinscreen";
+
+  const SignInScreen({super.key});
 
   @override
   State<SignInScreen> createState() => _SignInScreenState();
@@ -20,101 +18,127 @@ class SignInScreen extends StatefulWidget {
 class _SignInScreenState extends State<SignInScreen> {
   bool status = false;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      emailController.text = prefs.getString('email') ?? '';
+      passwordController.text = prefs.getString('password') ?? '';
+      status = prefs.getBool('rememberMe') ?? false;
+    });
+  }
+
+  Future<void> _saveUserData() async {
+    final prefs = await SharedPreferences.getInstance();
+    if (status) {
+      await prefs.setString('email', emailController.text);
+      await prefs.setString('password', passwordController.text);
+      await prefs.setBool('rememberMe', status);
+    } else {
+      await prefs.remove('email');
+      await prefs.remove('password');
+      await prefs.remove('rememberMe');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var mediaQuery = MediaQuery.of(context).size;
+
     return Scaffold(
-      body: Stack(
-        children: [
-          Padding(
-            padding:
-                const EdgeInsets.only(left: 8, right: 17, top: 18, bottom: 30),
-            child: Container(
-              width: mediaQuery.width * 100,
-              height: mediaQuery.height * 0.268,
+      backgroundColor: const Color(0xFF1F3551),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            // Header Image
+            Container(
+              width: mediaQuery.width,
+              height: mediaQuery.height * 0.3,
               decoration: const BoxDecoration(
                 color: Color(0xFF1F3551),
                 image: DecorationImage(
-                  image: AssetImage(
-                    "assets/images/rafiki.png",
-                  ),
-                  fit: BoxFit.fill,
+                  image: AssetImage("assets/images/rafiki.png"),
+                  fit: BoxFit.contain,
                 ),
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 320),
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: const BorderRadius.only(
+
+            // Main Content
+            Container(
+              decoration: const BoxDecoration(
+                color: Color(0xFF1F3551),
+                borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(20),
                   topRight: Radius.circular(20),
                 ),
-                color: Theme.of(context).primaryColor,
               ),
-              height: double.infinity,
-              width: double.infinity,
-            ),
-          ),
-          // Text(TextStrings.welcomeText),
-          Padding(
-            padding: const EdgeInsets.only(top: 350),
-            child: Container(
-              //color: Colors.amberAccent,
-              child: SingleChildScrollView(
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(
-                            right: 80, left: 20, bottom: 15, top: 0.6),
-                        child: Text(
-                          TextStrings.welcomeText,
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleLarge!
-                              .copyWith(color: Colors.white),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.all(20),
+                      child: Text(
+                        "Welcome Back!",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                      const SizedBox(
-                        height: 1,
-                      ),
-                      InputField(
-                        icon: Icons.email_outlined,
-                        hintText: "email",
-                        label: "Email",
-                        validatorIsContinue: (emailText) {
-                          final regExp = RegExp(
-                              r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
-                          if (!regExp.hasMatch(emailText)) {
-                            return "Email is not valid";
-                          }
-                          return null;
-                        },
-                      ),
-                      InputField(
-                        icon: Icons.lock,
-                        hintText: "password",
-                        label: "Password",
-                        isPassword: true,
-                        validatorIsContinue: (confirmPasswordText) {
-                          final regExpCon = RegExp(
-                              r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$');
-                          if (!regExpCon.hasMatch(confirmPasswordText)) {
-                            return "Password Must be at least 8 characters in length "
-                                "should contain at least one Special character"
-                                "should contain at least one digit"
-                                "should contain at least one lower case"
-                                "should contain at least one upper case";
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: 20),
-                      Row(
+                    ),
+
+                    // Email Input
+                    InputField(
+                      icon: Icons.email_outlined,
+                      hintText: "Enter your email",
+                      label: "Email",
+                      validatorIsContinue: (emailText) {
+                        final regExp = RegExp(
+                            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+                        if (emailText == null || emailText.isEmpty) {
+                          return "Please enter your email";
+                        }
+                        if (!regExp.hasMatch(emailText)) {
+                          return "Please enter a valid email";
+                        }
+                        return null;
+                      },
+                      controller: emailController,
+                    ),
+
+                    // Password Input
+                    InputField(
+                      icon: Icons.lock,
+                      hintText: "Enter your password",
+                      label: "Password",
+                      isPassword: true,
+                      validatorIsContinue: (passwordText) {
+                        if (passwordText == null || passwordText.isEmpty) {
+                          return "Please enter your password";
+                        }
+                        if (passwordText.length < 6) {
+                          return "Password must be at least 6 characters";
+                        }
+                        return null;
+                      },
+                      controller: passwordController,
+                    ),
+
+                    // Remember Me & Forgot Password
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Row(
                             children: [
@@ -125,89 +149,155 @@ class _SignInScreenState extends State<SignInScreen> {
                                     status = value!;
                                   });
                                 },
-                                checkColor: AppColors.cardColor,
-                                fillColor: WidgetStatePropertyAll(Colors.white),
+                                fillColor:
+                                    MaterialStateProperty.all(Colors.white),
+                                checkColor: const Color(0xFF1F3551),
                               ),
-                              Text(
-                                TextStrings.rememberMessage,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyLarge!
-                                    .copyWith(color: Colors.white),
+                              const Text(
+                                "Remember me",
+                                style: TextStyle(color: Colors.white),
                               ),
                             ],
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 25),
-                            child: TextButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => EmailScreen()),
-                                  );
-                                },
-                                child: Text(
-                                  TextStrings.forgotMessage,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyLarge!
-                                      .copyWith(color: Colors.white),
-                                )),
-                          )
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context)
+                                  .pushNamed(EmailScreen.routeName);
+                            },
+                            child: const Text(
+                              "Forgot Password?",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
                         ],
                       ),
-                      const SizedBox(height: 25),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 60, right: 60),
-                        child: MainButton(
-                            textButton: TextStrings.textButton2,
-                            onPress: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => HomeScreen()),
-                              );
-                              if (_formKey.currentState!.validate()) {
-                                print("Hello LogIn");
-                              }
-                            }),
+                    ),
+
+                    // Login Button
+                    Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: MainButton(
+                        textButton: "Login",
+                        onPress: () {
+                          if (_formKey.currentState!.validate()) {
+                            _saveUserData();
+                            Navigator.of(context)
+                                .pushNamed(HomeScreen.routeName);
+                          }
+                        },
                       ),
-                      const OrBorder(),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 88, right: 30),
-                        child: Row(
-                          children: [
-                            Text(
-                              TextStrings.textToSignIn,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleMedium!
-                                  .copyWith(color: AppColors.borderField),
+                    ),
+
+                    const OrBorder(),
+
+                    // Register Link
+                    Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text(
+                            "Don't have an account? ",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context)
+                                  .pushNamed(SignupScreen.routeName);
+                            },
+                            child: const Text(
+                              "Register",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                            TextButton(
-                                onPressed: () {
-                                  Navigator.of(context)
-                                      .pushNamed(SignupScreen.routeName);
-                                },
-                                child: Text(
-                                  TextStrings.register,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyLarge!
-                                      .copyWith(
-                                          color: AppColors.signAndRegister),
-                                ))
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// تعديل InputField Widget ليشمل controller
+class InputField extends StatefulWidget {
+  final IconData icon;
+  final String hintText;
+  final String label;
+  final bool isPassword;
+  final String? Function(String?)? validatorIsContinue;
+  final TextEditingController controller;
+
+  const InputField({
+    Key? key,
+    required this.icon,
+    required this.hintText,
+    required this.label,
+    this.isPassword = false,
+    this.validatorIsContinue,
+    required this.controller,
+  }) : super(key: key);
+
+  @override
+  State<InputField> createState() => _InputFieldState();
+}
+
+class _InputFieldState extends State<InputField> {
+  bool _isObscure = true;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      child: TextFormField(
+        controller: widget.controller,
+        obscureText: widget.isPassword ? _isObscure : false,
+        validator: widget.validatorIsContinue,
+        decoration: InputDecoration(
+          prefixIcon: Icon(widget.icon, color: Colors.white),
+          suffixIcon: widget.isPassword
+              ? IconButton(
+                  icon: Icon(
+                    _isObscure ? Icons.visibility_off : Icons.visibility,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _isObscure = !_isObscure;
+                    });
+                  },
+                )
+              : null,
+          hintText: widget.hintText,
+          labelText: widget.label,
+          labelStyle: const TextStyle(color: Colors.white),
+          hintStyle: const TextStyle(color: Colors.white54),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: const BorderSide(color: Colors.white),
           ),
-        ],
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: const BorderSide(color: Colors.white),
+          ),
+          errorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: const BorderSide(color: Colors.red),
+          ),
+          focusedErrorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: const BorderSide(color: Colors.red),
+          ),
+        ),
+        style: const TextStyle(color: Colors.white),
       ),
     );
   }

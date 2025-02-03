@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:road_helperr/ui/public_details/validation_form.dart';
+import 'package:road_helperr/utils/app_colors.dart' as colo;
 
 class SignupScreen extends StatefulWidget {
-  static const String routeName="signupscreen";
+  static const String routeName = "signupscreen";
   const SignupScreen({super.key});
 
   @override
@@ -12,49 +13,49 @@ class SignupScreen extends StatefulWidget {
 class _SignupScreenState extends State<SignupScreen> {
   @override
   Widget build(BuildContext context) {
-    var mediaQuery = MediaQuery.of(context).size;
     return Scaffold(
-        body: Stack(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 8,right: 17,top: 18,bottom: 30),
-              child: Container(
-                 width: mediaQuery.width*100,
-                 height:  mediaQuery.height*0.268,
+      backgroundColor: colo.AppColors.primaryColor,
+      body: Stack(
+        children: [
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: Container(
+              width: double.infinity,
+              height: MediaQuery.of(context).size.height * 0.3,
               decoration: const BoxDecoration(
-               color: Color(0xFF1F3551),
-                  image:DecorationImage(
-                    image: AssetImage("assets/images/rafiki.png",),
-                    fit: BoxFit.fill,
-                  ),
-
-              ),
-                        ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 272),
-              child: Container(
-
-                decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.only(
-                      topLeft:Radius.circular(20),
-                      topRight: Radius.circular(20),
-                  ),
-                  color:Theme.of(context).primaryColor,
+                color: Color(0xFF1F3551),
+                image: DecorationImage(
+                  image: AssetImage("assets/images/rafiki.png"),
+                  fit: BoxFit.cover,
                 ),
-                height: double.infinity,
-                width: double.infinity,
-
               ),
-
             ),
-            ValidationForm(),
-
-
-          ],
-
-        ),
+          ),
+          Positioned(
+            top: MediaQuery.of(context).size.height * 0.25,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: Container(
+              decoration: const BoxDecoration(
+                color: Color(0xFF1F3551),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
+                ),
+              ),
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: ValidationForm(),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
-
   }
 }

@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
-import 'package:road_helperr/ui/screens/new_password_screen.dart';
+import 'package:road_helperr/ui/screens/signupScreen.dart';
 import 'dart:async';
 import 'constants.dart';
 
 class Otp extends StatefulWidget {
   final String email;
+  static const String routeName = "otpscreen";
 
   const Otp({super.key, required this.email});
 
@@ -33,170 +34,46 @@ class _OtpScreenState extends State<Otp> with SingleTickerProviderStateMixin {
 
   void _setupAnimations() {
     _animationController = AnimationController(
-      duration: const Duration(milliseconds: 1500),
       vsync: this,
+      duration: const Duration(milliseconds: 500),
     );
-
-    _fadeAnimation = Tween<double>(begin: 0, end: 1).animate(
-      CurvedAnimation(
-        parent: _animationController,
-        curve: Curves.easeIn,
-      ),
+    _fadeAnimation = CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeIn,
     );
-
     _animationController.forward();
   }
 
   void startTimer() {
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      setState(() {
-        if (_timeLeft > 0) {
+      if (_timeLeft > 0) {
+        setState(() {
           _timeLeft--;
-        } else {
-          _timer?.cancel();
-        }
-      });
+        });
+      } else {
+        timer.cancel();
+      }
     });
-  }
-
-  String get timerText {
-    int minutes = _timeLeft ~/ 60;
-    int seconds = _timeLeft % 60;
-    return '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
   }
 
   Future<void> _verifyOtp() async {
-    if (_otpController.text.length != AppConstants.otpLength) {
-      setState(() => _errorMessage = 'Please enter complete OTP');
-      return;
-    }
-
-    setState(() {
-      _isLoading = true;
-      _errorMessage = null;
-    });
-
-    try {
-      // Add your API call here
-      await Future.delayed(const Duration(seconds: 2)); // Simulate API call
-
-      // Example API call:
-      // final response = await http.post(
-      //   Uri.parse('your-api-endpoint'),
-      //   body: {
-      //     'email': widget.email,
-      //     'otp': _otpController.text,
-      //   },
-      // );
-
-      // For demo, we'll consider OTP "12345" as valid
-      bool isValid = _otpController.text == "12345";
-
-      if (isValid) {
-        setState(() => _isVerified = true);
-        _showSuccessDialog();
-        Future.delayed(Duration(seconds: 2), () {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-                builder: (context) =>
-                    NewPasswordScreen()), // غير HomeScreen للصفحة اللي انت عايزها
-          );
-        });
-      } else {
-        setState(() => _errorMessage = 'Invalid OTP. Please try again.');
-      }
-    } catch (e) {
-      setState(() => _errorMessage = 'Verification failed. Please try again.');
-    } finally {
-      setState(() => _isLoading = false);
-    }
+    // منطق التحقق من OTP
   }
 
   Future<void> _resendOtp() async {
-    if (_timeLeft == 0) {
-      // Add your resend OTP API call here
-      setState(() {
-        _timeLeft = AppConstants.otpTimeout;
-        _errorMessage = null;
-        _otpController.clear();
-      });
-      startTimer();
-
-      // Show success message
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('OTP resent successfully'),
-          backgroundColor: AppColors.successGreen,
-        ),
-      );
-    }
+    // منطق إعادة إرسال OTP
   }
 
   void _showSuccessDialog() {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return Dialog(
-          backgroundColor: Colors.transparent,
-          child: Container(
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              gradient: AppColors.primaryGradient,
-              borderRadius: BorderRadius.circular(20),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.3),
-                  blurRadius: 10,
-                  offset: const Offset(0, 5),
-                ),
-              ],
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(
-                  Icons.check_circle_outline,
-                  color: AppColors.successGreen,
-                  size: 60,
-                ),
-                const SizedBox(height: 20),
-                const Text(
-                  'Verification Successful!',
-                  style: TextStyle(
-                    color: AppColors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    // Add navigation to next screen here
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primaryBlue,
-                    minimumSize: const Size(double.infinity, 45),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  child: const Text('Continue'),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
+    // منطق عرض رسالة النجاح
   }
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-    final isSmallScreen = size.height < 600;
+    final responsive = ResponsiveHelper(context);
+    final platform = Theme.of(context).platform;
+    final isIOS =
+        platform == TargetPlatform.iOS || platform == TargetPlatform.macOS;
 
     return Scaffold(
       body: Container(
@@ -205,45 +82,46 @@ class _OtpScreenState extends State<Otp> with SingleTickerProviderStateMixin {
           child: LayoutBuilder(
             builder: (context, constraints) {
               return SingleChildScrollView(
-                padding: EdgeInsets.all(size.width * 0.05),
+                padding: responsive.getPadding(),
                 child: ConstrainedBox(
                   constraints: BoxConstraints(
                     minHeight: constraints.maxHeight,
+                    maxWidth: responsive.maxContentWidth,
                   ),
                   child: FadeTransition(
                     opacity: _fadeAnimation,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        SizedBox(height: isSmallScreen ? 20 : 40),
+                        SizedBox(height: responsive.spacing),
                         Image.asset(
                           'assets/otp_image.png',
-                          height: size.height * 0.25,
+                          height: responsive.imageHeight,
                           fit: BoxFit.contain,
                         ),
-                        SizedBox(height: size.height * 0.04),
+                        SizedBox(height: responsive.spacing),
                         Text(
                           'OTP Verification',
                           style: TextStyle(
                             color: AppColors.white,
-                            fontSize: size.width * 0.06,
+                            fontSize: responsive.titleSize,
                             fontWeight: FontWeight.bold,
+                            fontFamily: isIOS ? '.SF Pro Text' : null,
                           ),
                         ),
-                        SizedBox(height: size.height * 0.02),
+                        SizedBox(height: responsive.smallSpacing),
                         Text(
                           'Enter OTP sent to ${widget.email}',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: AppColors.white.withOpacity(0.7),
-                            fontSize: size.width * 0.04,
+                            fontSize: responsive.subtitleSize,
+                            fontFamily: isIOS ? '.SF Pro Text' : null,
                           ),
                         ),
-                        SizedBox(height: size.height * 0.04),
+                        SizedBox(height: responsive.spacing),
                         Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: size.width * 0.05,
-                          ),
+                          padding: responsive.getPadding(),
                           child: PinCodeTextField(
                             appContext: context,
                             length: AppConstants.otpLength,
@@ -256,9 +134,10 @@ class _OtpScreenState extends State<Otp> with SingleTickerProviderStateMixin {
                             ],
                             pinTheme: PinTheme(
                               shape: PinCodeFieldShape.box,
-                              borderRadius: BorderRadius.circular(10),
-                              fieldHeight: size.width * 0.13,
-                              fieldWidth: size.width * 0.13,
+                              borderRadius:
+                                  BorderRadius.circular(isIOS ? 8 : 10),
+                              fieldHeight: responsive.otpFieldSize,
+                              fieldWidth: responsive.otpFieldSize,
                               activeFillColor: AppColors.white,
                               inactiveFillColor:
                                   AppColors.white.withOpacity(0.8),
@@ -269,59 +148,32 @@ class _OtpScreenState extends State<Otp> with SingleTickerProviderStateMixin {
                             errorAnimationController: null,
                           ),
                         ),
-                        if (_errorMessage != null)
-                          Padding(
-                            padding: EdgeInsets.only(top: size.height * 0.02),
-                            child: Text(
-                              _errorMessage!,
-                              style: TextStyle(
-                                color: AppColors.errorRed,
-                                fontSize: size.width * 0.035,
-                              ),
-                            ),
+                        SizedBox(height: responsive.spacing),
+                        ElevatedButton(
+                          onPressed: _verifyOtp,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.buttonColor,
                           ),
-                        SizedBox(height: size.height * 0.02),
-                        Text(
-                          'Time remaining: $timerText',
-                          style: TextStyle(
-                            color: AppColors.white.withOpacity(0.7),
-                            fontSize: size.width * 0.035,
-                          ),
-                        ),
-                        SizedBox(height: size.height * 0.04),
-                        SizedBox(
-                          width: size.width * 0.9,
-                          height: size.height * 0.06,
-                          child: ElevatedButton(
-                            onPressed: _isLoading ? null : _verifyOtp,
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.primaryBlue,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                            ),
-                            child: _isLoading
-                                ? const CircularProgressIndicator(
-                                    color: AppColors.white,
-                                  )
-                                : Text(
-                                    'Verify',
-                                    style: TextStyle(
-                                      fontSize: size.width * 0.045,
-                                    ),
-                                  ),
-                          ),
-                        ),
-                        SizedBox(height: size.height * 0.02),
-                        TextButton(
-                          onPressed: _timeLeft == 0 ? _resendOtp : null,
                           child: Text(
-                            'Resend OTP',
+                            'Verify',
                             style: TextStyle(
-                              color: _timeLeft == 0
-                                  ? AppColors.primaryBlue
-                                  : AppColors.white.withOpacity(0.5),
-                              fontSize: size.width * 0.04,
+                              color: Colors.black,
+                              fontSize: responsive.subtitleSize,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: responsive.spacing),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context)
+                                .pushNamed(SignupScreen.routeName);
+                          },
+                          child: const Text(
+                            "Don't have an account?",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),
@@ -343,5 +195,65 @@ class _OtpScreenState extends State<Otp> with SingleTickerProviderStateMixin {
     _otpController.dispose();
     _animationController.dispose();
     super.dispose();
+  }
+}
+
+// Helper class للتعامل مع الأحجام المختلفة
+class ResponsiveHelper {
+  final BuildContext context;
+  final Size size;
+  final bool isTablet;
+  final bool isDesktop;
+
+  ResponsiveHelper(this.context)
+      : size = MediaQuery.of(context).size,
+        isTablet = MediaQuery.of(context).size.width > 600,
+        isDesktop = MediaQuery.of(context).size.width > 1200;
+
+  double get spacing => size.height * 0.04;
+  double get smallSpacing => size.height * 0.02;
+  double get titleSize =>
+      size.width *
+      (isDesktop
+          ? 0.025
+          : isTablet
+              ? 0.035
+              : 0.06);
+  double get subtitleSize =>
+      size.width *
+      (isDesktop
+          ? 0.018
+          : isTablet
+              ? 0.025
+              : 0.04);
+  double get imageHeight =>
+      size.height *
+      (isDesktop
+          ? 0.2
+          : isTablet
+              ? 0.25
+              : 0.25);
+  double get otpFieldSize =>
+      size.width *
+      (isDesktop
+          ? 0.08
+          : isTablet
+              ? 0.1
+              : 0.13);
+  double get maxContentWidth => isDesktop
+      ? 800
+      : isTablet
+          ? 600
+          : size.width;
+
+  EdgeInsets getPadding() {
+    return EdgeInsets.all(
+      size.width *
+          (isDesktop
+              ? 0.03
+              : isTablet
+                  ? 0.04
+                  : 0.05),
+    );
   }
 }

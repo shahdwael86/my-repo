@@ -7,7 +7,7 @@ class OrBorder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  Column(
+    return Column(
       children: [
         Row(
           children: [
@@ -21,10 +21,13 @@ class OrBorder extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
-              child: Text(TextStrings.or,
-                style: Theme.of(context).textTheme.titleLarge!.
-                copyWith(color: Colors.white),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              child: Text(
+                TextStrings.or,
+                style: Theme.of(context)
+                    .textTheme
+                    .titleLarge!
+                    .copyWith(color: Colors.white),
               ),
             ),
             const Expanded(
@@ -41,12 +44,24 @@ class OrBorder extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            IconButton(onPressed: (){}, icon: Tab(icon: Image.asset("assets/images/logos_facebook.png"))),
-            const SizedBox(width: 15,),
-            IconButton(onPressed: (){}, icon: Tab(icon: Image.asset("assets/images/logos_google-gmail.png"))),
-            const SizedBox(width: 15,),
-            IconButton(onPressed: (){}, icon: Tab(icon: Image.asset("assets/images/logos_twitter.png"))),
-
+            IconButton(
+                onPressed: () {},
+                icon:
+                    Tab(icon: Image.asset("assets/images/logos_facebook.png"))),
+            const SizedBox(
+              width: 15,
+            ),
+            IconButton(
+                onPressed: () {},
+                icon: Tab(
+                    icon: Image.asset("assets/images/logos_google-gmail.png"))),
+            const SizedBox(
+              width: 15,
+            ),
+            IconButton(
+                onPressed: () {},
+                icon:
+                    Tab(icon: Image.asset("assets/images/logos_twitter.png"))),
           ],
         ),
       ],

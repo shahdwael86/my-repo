@@ -15,6 +15,8 @@ class AppColors{
   static const Color switchColor=Color(0xFF808080);
   static const Color textStackColor=Color(0xFF494444);
 
+  static var primaryColor;
+
 
 
 }

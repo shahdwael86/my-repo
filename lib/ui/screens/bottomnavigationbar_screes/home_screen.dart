@@ -1,16 +1,17 @@
-
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:road_helperr/ui/screens/bottomnavigationbar_screes/profile_screen.dart';
 import 'package:road_helperr/utils/app_colors.dart';
 import 'package:road_helperr/utils/text_strings.dart';
-
 import '../ai_chat.dart';
 import 'map_screen.dart';
 import 'notification_screen.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({super.key});
   static const String routeName = "home";
 
   @override
@@ -18,6 +19,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  int _selectedIndex = 0;
 
   final Map<String, bool> serviceStates = {
     TextStrings.homeGas: false,
@@ -28,227 +30,537 @@ class _HomeScreenState extends State<HomeScreen> {
     TextStrings.homeWinch: false,
   };
 
+  int selectedServicesCount = 0;
+  String location = "Fetching location...";
+
+  @override
+  void initState() {
+    super.initState();
+    _getCurrentLocation();
+  }
+
+  Future<void> _getCurrentLocation() async {
+    try {
+      Position position = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high);
+      List<Placemark> placemarks =
+          await placemarkFromCoordinates(position.latitude, position.longitude);
+
+      if (placemarks.isNotEmpty) {
+        Placemark place = placemarks[0];
+        setState(() {
+          location = "${place.locality}, ${place.country}";
+        });
+      }
+    } catch (e) {
+      setState(() {
+        location = "Location not available";
+      });
+    }
+  }
+
+  void _showWarningDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          title: const Text('Warning'),
+          content: const Text('Please select between 1 to 3 services.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _navigateToMap(BuildContext context) {
+    if (selectedServicesCount >= 1 && selectedServicesCount <= 3) {
+      Navigator.pushNamed(context, MapScreen.routeName);
+    } else {
+      _showWarningDialog(context);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage("assets/images/home background.png"),
-          fit: BoxFit.fill,
+    return Scaffold(
+      body: OrientationBuilder(
+        builder: (context, orientation) {
+          return LayoutBuilder(
+            builder: (context, constraints) {
+              final size = MediaQuery.of(context).size;
+              final isTablet = constraints.maxWidth > 600;
+              final isDesktop = constraints.maxWidth > 1200;
+
+              double titleSize = size.width *
+                  (isDesktop
+                      ? 0.03
+                      : isTablet
+                          ? 0.04
+                          : 0.055);
+              double iconSize = size.width *
+                  (isDesktop
+                      ? 0.03
+                      : isTablet
+                          ? 0.04
+                          : 0.05);
+              double padding = size.width *
+                  (isDesktop
+                      ? 0.02
+                      : isTablet
+                          ? 0.03
+                          : 0.04);
+
+              return Container(
+                decoration: const BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage("assets/images/home background.png"),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                child: _buildScaffold(
+                    context, constraints, size, titleSize, iconSize, padding),
+              );
+            },
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildScaffold(BuildContext context, BoxConstraints constraints,
+      Size size, double titleSize, double iconSize, double padding) {
+    final platform = Theme.of(context).platform;
+
+    if (platform == TargetPlatform.iOS || platform == TargetPlatform.macOS) {
+      return _buildCupertinoScaffold(
+          context, constraints, size, titleSize, iconSize, padding);
+    } else {
+      return _buildMaterialScaffold(
+          context, constraints, size, titleSize, iconSize, padding);
+    }
+  }
+
+  Widget _buildMaterialScaffold(
+      BuildContext context,
+      BoxConstraints constraints,
+      Size size,
+      double titleSize,
+      double iconSize,
+      double padding) {
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+          icon: Icon(
+            Icons.location_on_outlined,
+            color: Colors.white,
+            size: iconSize * 1.2,
+          ),
+          onPressed: () {},
+        ),
+        title: Text(
+          location,
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: titleSize,
+          ),
+        ),
+        actions: [
+          Padding(
+            padding: EdgeInsets.all(padding),
+            child: CircleAvatar(
+              backgroundImage: const AssetImage('assets/images/Ellipse 42.png'),
+              radius: titleSize,
+            ),
+          ),
+        ],
+      ),
+      body: SingleChildScrollView(
+        // إضافة SingleChildScrollView للتمرير
+        child: _buildBody(
+            context, constraints, size, titleSize, iconSize, padding),
+      ),
+      bottomNavigationBar: _buildBottomNavBar(context, iconSize),
+    );
+  }
+
+  Widget _buildCupertinoScaffold(
+      BuildContext context,
+      BoxConstraints constraints,
+      Size size,
+      double titleSize,
+      double iconSize,
+      double padding) {
+    return CupertinoPageScaffold(
+      navigationBar: CupertinoNavigationBar(
+        backgroundColor: Colors.transparent,
+        border: null,
+        leading: CupertinoButton(
+          padding: EdgeInsets.zero,
+          child: Icon(
+            CupertinoIcons.location,
+            color: Colors.white,
+            size: iconSize * 1.2,
+          ),
+          onPressed: () {},
+        ),
+        middle: Text(
+          location,
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: titleSize,
+            fontFamily: '.SF Pro Text',
+          ),
+        ),
+        trailing: Padding(
+          padding: EdgeInsets.all(padding),
+          child: CircleAvatar(
+            backgroundImage: const AssetImage('assets/images/Ellipse 42.png'),
+            radius: titleSize,
+          ),
         ),
       ),
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          leading: IconButton(
-            icon: const Icon(Icons.location_on_outlined, color: Colors.white),
-            onPressed: () {
-              // لما ندوس هنا ممكن نروح للخريطه او اي حته تانيه انا عايزاها
-            },
-          ),
-          title: const Text(
-            TextStrings.homeYourLocation,
-            style: TextStyle(color: Colors.white, fontSize: 16),
-          ),
-          actions: const [
-            CircleAvatar(
-              backgroundImage: AssetImage('assets/images/Ellipse 42.png'),
-            ),
-            SizedBox(width: 10),
-          ],
-        ),
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
+      child: SafeArea(
+        child: SingleChildScrollView(
+          // إضافة SingleChildScrollView للتمرير
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                TextStrings.homeGetYouBack,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 20),
-              Expanded(
-                child: Container(
-                  padding: const EdgeInsets.all(22),
-                  decoration: BoxDecoration(
-                    color: AppColors.backGroundColor,
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: Column(
-                    children: [
-                      Expanded(
-                        child: GridView.count(
-                          crossAxisCount: 2,
-                          mainAxisSpacing: 30,
-                          crossAxisSpacing: 30,
-                          children: serviceStates.entries.map((entry) {
-                            return ServiceCard(
-                              title: entry.key,
-                              icon: getServiceIcon(entry.key),
-                              isSelected: entry.value,
-                              onToggle: (value) {
-                                setState(() {
-                                  serviceStates[entry.key] = value;
-                                });
-                              },
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.basicButton,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 39,
-                            vertical: 15,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                        onPressed: () {
-                        },
-                        child: const Text(
-                          TextStrings.homeGetYourService,
-                          style: TextStyle(color: Colors.white, fontSize: 20),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-
+              _buildBody(
+                  context, constraints, size, titleSize, iconSize, padding),
+              _buildBottomNavBar(context, iconSize),
             ],
           ),
-        ),
-
-    bottomNavigationBar: CurvedNavigationBar(
-          backgroundColor: AppColors.cardColor,
-          color: AppColors.backGroundColor ,
-          animationDuration: const Duration(milliseconds: 300),
-          height: 56,
-          items: const [
-            Icon(Icons.home_outlined, size: 20, color: Colors.white),
-            Icon(Icons.location_on_outlined, size: 20, color: Colors.white),
-            Icon(Icons.textsms_outlined, size: 20, color: Colors.white),
-            Icon(Icons.notifications_outlined, size: 20, color: Colors.white),
-            Icon(Icons.person_2_outlined, size: 20, color: Colors.white),
-          ],
-          onTap: (index) {
-            switch (index) {
-              case 0:
-                Navigator.pushNamed(context, HomeScreen.routeName);
-                break;
-              case 1:
-                Navigator.pushNamed(context, MapScreen.routeName);
-                break;
-              case 2:
-                Navigator.pushNamed(context, AiChat.routeName);
-                break;
-              case 3:
-                Navigator.pushNamed(context, NotificationScreen.routeName);
-                break;
-              case 4:
-                Navigator.pushNamed(context, ProfileScreen.routeName);
-                break;
-            }
-          },
         ),
       ),
     );
   }
 
+  Widget _buildBody(BuildContext context, BoxConstraints constraints, Size size,
+      double titleSize, double iconSize, double padding) {
+    final platform = Theme.of(context).platform;
+    final isIOS =
+        platform == TargetPlatform.iOS || platform == TargetPlatform.macOS;
+
+    return Padding(
+      padding: EdgeInsets.all(padding),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            TextStrings.homeGetYouBack,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: titleSize * 1.2,
+              fontWeight: FontWeight.bold,
+              fontFamily: isIOS ? '.SF Pro Text' : null,
+            ),
+          ),
+          SizedBox(height: size.height * 0.02),
+          Container(
+            padding: EdgeInsets.all(padding),
+            decoration: BoxDecoration(
+              color: AppColors.backGroundColor,
+              borderRadius: BorderRadius.circular(isIOS ? 10 : 15),
+            ),
+            child: Column(
+              children: [
+                _buildServiceGrid(constraints, iconSize, titleSize, padding),
+                SizedBox(height: size.height * 0.02),
+                _buildGetServiceButton(context, size, titleSize),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
-  IconData getServiceIcon(String title) {
-    switch (title) {
-      case TextStrings.homeGas:
-        return Icons.local_gas_station;
-      case TextStrings.homePolice:
-        return Icons.local_police;
-      case TextStrings.homeFire:
-        return Icons.fire_truck;
-      case TextStrings.homeHospital:
-        return Icons.local_hospital;
-      case TextStrings.homeMaintenance:
-        return Icons.build;
-      case TextStrings.homeWinch:
-        return Icons.car_repair;
-      default:
-        return Icons.help;
+  Widget _buildServiceGrid(BoxConstraints constraints, double iconSize,
+      double titleSize, double padding) {
+    final isDesktop = constraints.maxWidth > 1200;
+    final isTablet = constraints.maxWidth > 600;
+
+    return GridView.count(
+      crossAxisCount: isDesktop
+          ? 4
+          : isTablet
+              ? 3
+              : 2,
+      mainAxisSpacing: padding,
+      crossAxisSpacing: padding,
+      shrinkWrap: true, // لجعل GridView قابلة للتمرير
+      physics: const NeverScrollableScrollPhysics(), // لمنع التمرير المزدوج
+      children: serviceStates.entries.map((entry) {
+        return ServiceCard(
+          title: entry.key,
+          icon: getServiceIcon(entry.key),
+          isSelected: entry.value,
+          iconSize: iconSize,
+          fontSize: titleSize * 0.8,
+          onToggle: (value) {
+            setState(() {
+              if (value) {
+                if (selectedServicesCount < 3) {
+                  serviceStates[entry.key] = value;
+                  selectedServicesCount++;
+                } else {
+                  _showWarningDialog(context);
+                }
+              } else {
+                serviceStates[entry.key] = value;
+                selectedServicesCount--;
+              }
+            });
+          },
+        );
+      }).toList(),
+    );
+  }
+
+  Widget _buildGetServiceButton(
+      BuildContext context, Size size, double titleSize) {
+    final platform = Theme.of(context).platform;
+    final isIOS =
+        platform == TargetPlatform.iOS || platform == TargetPlatform.macOS;
+
+    if (isIOS) {
+      return SizedBox(
+        width: double.infinity,
+        height: size.height * 0.06,
+        child: CupertinoButton(
+          color: AppColors.basicButton,
+          borderRadius: BorderRadius.circular(8),
+          onPressed: () => _navigateToMap(context),
+          child: Text(
+            TextStrings.homeGetYourService,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: titleSize,
+              fontFamily: '.SF Pro Text',
+            ),
+          ),
+        ),
+      );
+    }
+
+    return SizedBox(
+      width: double.infinity,
+      height: size.height * 0.06,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: AppColors.basicButton,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+        onPressed: () => _navigateToMap(context),
+        child: Text(
+          TextStrings.homeGetYourService,
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: titleSize,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBottomNavBar(BuildContext context, double iconSize) {
+    final platform = Theme.of(context).platform;
+    final isIOS =
+        platform == TargetPlatform.iOS || platform == TargetPlatform.macOS;
+
+    if (isIOS) {
+      return CupertinoTabBar(
+        backgroundColor: AppColors.backGroundColor,
+        activeColor: Colors.white,
+        inactiveColor: Colors.white.withOpacity(0.6),
+        height: iconSize * 3,
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(CupertinoIcons.home, size: iconSize),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(CupertinoIcons.location, size: iconSize),
+            label: 'Map',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(CupertinoIcons.chat_bubble, size: iconSize),
+            label: 'Chat',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(CupertinoIcons.bell, size: iconSize),
+            label: 'Notifications',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(CupertinoIcons.person, size: iconSize),
+            label: 'Profile',
+          ),
+        ],
+        onTap: (index) => _handleNavigation(context, index),
+      );
+    }
+
+    return CurvedNavigationBar(
+      backgroundColor: AppColors.cardColor,
+      color: AppColors.backGroundColor,
+      animationDuration: const Duration(milliseconds: 300),
+      height: iconSize * 3 > 75.0 ? 75.0 : iconSize * 3,
+      items: [
+        Icon(Icons.home_outlined, size: iconSize, color: Colors.white),
+        Icon(Icons.location_on_outlined, size: iconSize, color: Colors.white),
+        Icon(Icons.textsms_outlined, size: iconSize, color: Colors.white),
+        Icon(Icons.notifications_outlined, size: iconSize, color: Colors.white),
+        Icon(Icons.person_2_outlined, size: iconSize, color: Colors.white),
+      ],
+      onTap: (index) => _handleNavigation(context, index),
+    );
+  }
+
+  void _handleNavigation(BuildContext context, int index) {
+    final routes = [
+      HomeScreen.routeName,
+      MapScreen.routeName,
+      AiChat.routeName,
+      NotificationScreen.routeName,
+      ProfileScreen.routeName,
+    ];
+    if (index < routes.length) {
+      Navigator.pushNamed(context, routes[index]);
     }
   }
 
+  IconData getServiceIcon(String title) {
+    final platform = Theme.of(context).platform;
+    final isIOS =
+        platform == TargetPlatform.iOS || platform == TargetPlatform.macOS;
+
+    switch (title) {
+      case TextStrings.homeGas:
+        return isIOS ? CupertinoIcons.gauge : Icons.local_gas_station;
+      case TextStrings.homePolice:
+        return isIOS ? CupertinoIcons.shield_fill : Icons.local_police;
+      case TextStrings.homeFire:
+        return isIOS ? CupertinoIcons.flame_fill : Icons.fire_truck;
+      case TextStrings.homeHospital:
+        return isIOS ? CupertinoIcons.heart_fill : Icons.local_hospital;
+      case TextStrings.homeMaintenance:
+        return isIOS ? CupertinoIcons.wrench_fill : Icons.build;
+      case TextStrings.homeWinch:
+        return isIOS ? CupertinoIcons.car_fill : Icons.car_repair;
+      default:
+        return isIOS ? CupertinoIcons.question : Icons.help;
+    }
+  }
+}
 
 class ServiceCard extends StatelessWidget {
   final String title;
   final IconData icon;
   final bool isSelected;
   final ValueChanged<bool> onToggle;
+  final double iconSize;
+  final double fontSize;
 
   const ServiceCard({
-    Key? key,
+    super.key,
     required this.title,
     required this.icon,
     required this.isSelected,
     required this.onToggle,
-  }) : super(key: key);
+    required this.iconSize,
+    required this.fontSize,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: isSelected ? AppColors.stackColorIsSelected : AppColors.stackColor,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Stack(
-        children: [
-          Positioned(
-            top: 13,
-            right: 12,
-            child: Switch(
-              value: isSelected,
-              onChanged: onToggle,
-              activeColor: Colors.white,
-              activeTrackColor:  AppColors.backGroundColor,
-              inactiveThumbColor: Colors.white,
-              inactiveTrackColor: AppColors.switchColor,
-            ),
+    final platform = Theme.of(context).platform;
+    final isIOS =
+        platform == TargetPlatform.iOS || platform == TargetPlatform.macOS;
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        double padding = constraints.maxWidth * 0.1;
+
+        return Container(
+          decoration: BoxDecoration(
+            color: isSelected
+                ? AppColors.stackColorIsSelected
+                : AppColors.stackColor,
+            borderRadius: BorderRadius.circular(isIOS ? 15 : 20),
           ),
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.only(right: 77, left: 5, top: 15),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Icon(
-                    icon,
-                    size: 50,
-                    color: isSelected ? Colors.white : AppColors.backGroundColor,
-                  ),
-                  const SizedBox(height: 10),
-                  Text(
-                    maxLines: 2,
-                    title,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: isSelected ? Colors.white : AppColors.textStackColor,
-                      fontSize: 11,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
+          child: Stack(
+            children: [
+              Positioned(
+                top: padding,
+                right: padding,
+                child: Transform.scale(
+                  scale: constraints.maxWidth / 200,
+                  child: isIOS
+                      ? CupertinoSwitch(
+                          value: isSelected,
+                          onChanged: onToggle,
+                          activeColor: AppColors.backGroundColor,
+                        )
+                      : Switch(
+                          value: isSelected,
+                          onChanged: onToggle,
+                          activeColor: Colors.white,
+                          activeTrackColor: AppColors.backGroundColor,
+                          inactiveThumbColor: Colors.white,
+                          inactiveTrackColor: AppColors.switchColor,
+                        ),
+                ),
               ),
-            ),
+              Center(
+                child: Padding(
+                  padding: EdgeInsets.all(padding),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        icon,
+                        size: iconSize,
+                        color: isSelected
+                            ? Colors.white
+                            : AppColors.backGroundColor,
+                      ),
+                      SizedBox(height: padding / 2),
+                      Text(
+                        title,
+                        textAlign: TextAlign.center,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: isSelected
+                              ? Colors.white
+                              : AppColors.textStackColor,
+                          fontSize: fontSize,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: isIOS ? '.SF Pro Text' : null,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }

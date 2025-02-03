@@ -21,7 +21,7 @@ class _TimerScreenState extends State<TimerScreen> {
           if (_seconds == 0) {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => OtpExpiredScreen()),
+              MaterialPageRoute(builder: (context) => const OtpExpiredScreen()),
             );
           }
         });

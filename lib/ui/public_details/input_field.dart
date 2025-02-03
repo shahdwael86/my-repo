@@ -1,78 +1,86 @@
 import 'package:flutter/material.dart';
-import 'package:road_helperr/utils/app_colors.dart';
+import 'package:flutter/services.dart';
 
-class InputField extends StatelessWidget {
-  final String label;
+class InputField extends StatefulWidget {
+  final IconData icon;
   final String hintText;
-  final IconData? icon;
-  final String? Function(String) validatorIsContinue;
+  final String label;
   final bool isPassword;
-  const InputField({super.key,
-    this.label="label name",
+  final String? Function(String?)? validatorIsContinue;
+  final TextInputType keyboardType;
+  final TextEditingController controller;
+  final FocusNode focusNode;
+
+  const InputField({
+    Key? key,
     required this.icon,
-    required this.validatorIsContinue,
     required this.hintText,
-    this.isPassword=false,
-  });
+    required this.label,
+    this.isPassword = false,
+    this.validatorIsContinue,
+    this.keyboardType = TextInputType.text,
+    required this.controller,
+    required this.focusNode,
+  }) : super(key: key);
+
+  @override
+  State<InputField> createState() => _InputFieldState();
+}
+
+class _InputFieldState extends State<InputField> {
+  bool _isObscure = true;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: TextFormField(
-              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                color: Colors.white
-              ),
-
-                obscureText: isPassword,
-                validator: (value){
-                if(value!.isEmpty){
-                  return "Field is required";
-                }
-                return validatorIsContinue(value);
-                },
-
-               // controller: controller,
-               decoration: InputDecoration(
-
-                 label: Text(label,style: const TextStyle(fontSize: 14,
-                 color: Colors.white,
-                 fontWeight: FontWeight.w400),),
-                 hintText: hintText,
-                 prefixIcon: Icon(icon,color: Colors.white,),
-                 suffixIcon: isPassword ?
-                 IconButton(
-                     onPressed: (){},
-                     icon:  Icon(
-                       Icons.visibility_off,
-                       color: Colors.white,
-                     )
-                 )
-                     :null,
-
-                 fillColor:AppColors.cardColor ,
-                 filled: true,
-
-
-                 enabledBorder: OutlineInputBorder(
-                   borderRadius: BorderRadius.circular(25),
-                   borderSide: const BorderSide(
-                     color: Color(0xFFD6D1D1),
-                     width: 1.5,
-                   )
-                 ),
-
-                 focusedBorder: OutlineInputBorder(
-                     borderRadius: BorderRadius.circular(25),
-                     borderSide: const BorderSide(
-                       color: Color(0xFF4285F4),
-                       width: 2,
-                     )
-                 ),
-               ),
+        controller: widget.controller,
+        focusNode: widget.focusNode,
+        obscureText: widget.isPassword ? _isObscure : false,
+        validator: widget.validatorIsContinue,
+        keyboardType: widget.keyboardType,
+        inputFormatters: widget.keyboardType == TextInputType.number
+            ? [FilteringTextInputFormatter.digitsOnly]
+            : null,
+        decoration: InputDecoration(
+          prefixIcon: Icon(widget.icon, color: Colors.white),
+          suffixIcon: widget.isPassword
+              ? IconButton(
+                  icon: Icon(
+                    _isObscure ? Icons.visibility_off : Icons.visibility,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _isObscure = !_isObscure;
+                    });
+                  },
+                )
+              : null,
+          hintText: widget.hintText,
+          labelText: widget.label,
+          labelStyle: const TextStyle(color: Colors.white),
+          hintStyle: const TextStyle(color: Colors.white54),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: const BorderSide(color: Colors.white),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: const BorderSide(color: Colors.white),
+          ),
+          errorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: const BorderSide(color: Colors.red),
+          ),
+          focusedErrorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: const BorderSide(color: Colors.red),
+          ),
+        ),
+        style: const TextStyle(color: Colors.white),
       ),
-
     );
   }
 }
-

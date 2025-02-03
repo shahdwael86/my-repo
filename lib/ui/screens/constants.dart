@@ -15,6 +15,8 @@ class AppColors {
   static const white = Colors.white;
   static const errorRed = Colors.red;
   static const successGreen = Colors.green;
+
+  static var buttonColor;
 }
 
 class AppConstants {

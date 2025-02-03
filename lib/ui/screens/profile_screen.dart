@@ -1,11 +1,53 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:road_helperr/ui/screens/signin_screen.dart';
+import 'dart:io';
 import 'profile_ribon.dart';
 import 'edit_profile_screen.dart';
 
-class PersonScreen extends StatelessWidget {
-    static const String routeName="profscreen";
-
+class PersonScreen extends StatefulWidget {
+  static const String routeName = "profscreen";
   const PersonScreen({super.key});
+
+  @override
+  State<PersonScreen> createState() => _PersonScreenState();
+}
+
+class _PersonScreenState extends State<PersonScreen> {
+  File? _profileImage;
+  String name = "Mario Ebrahim";
+  String email = "Mario.Ebrahim@gmail.com";
+  bool isDarkMode = false;
+  String selectedLanguage = "English";
+
+  Future<void> _pickImage() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      setState(() {
+        _profileImage = File(pickedFile.path);
+      });
+    }
+  }
+
+  void _toggleDarkMode(bool value) {
+    setState(() {
+      isDarkMode = value;
+      // يمكنك إضافة منطق هنا لتغيير الثيم
+    });
+  }
+
+  void _changeLanguage(String? newValue) {
+    setState(() {
+      selectedLanguage = newValue!;
+      // يمكنك إضافة منطق هنا لتغيير اللغة
+    });
+  }
+
+  void _logout(BuildContext context) {
+    Navigator.pushReplacementNamed(context, SignInScreen.routeName);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -14,98 +56,68 @@ class PersonScreen extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
+            const SizedBox(height: 40), // Space for status bar
+            // Profile Avatar
             Stack(
-              clipBehavior: Clip.none, // للسماح بخروج العناصر خارج حدود Stack
+              alignment: Alignment.center,
               children: [
-                Container(
-                  height: 195,
-                  decoration: const BoxDecoration(
-                    color: Color(0xFF2C4874),
-                    borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(20),
-                      bottomRight: Radius.circular(20),
-                    ),
-                  ),
-                  child: const Row(
-                    children: [
-                      SizedBox(width: 40),
-                      Icon(Icons.arrow_back_outlined,
-                          color: Colors.white, size: 22),
-                      SizedBox(width: 110),
-                      Text(
-                        "Profile",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 22,
-                        ),
-                      )
-                    ],
+                CircleAvatar(
+                  radius: 60,
+                  backgroundColor: Colors.white,
+                  child: CircleAvatar(
+                    radius: 55,
+                    backgroundImage: _profileImage != null
+                        ? FileImage(_profileImage!)
+                        : const AssetImage('assets/images/logo.png')
+                            as ImageProvider,
                   ),
                 ),
                 Positioned(
-                  top: 130, // لضبط مكان الـ CircularAvatar
-                  left: MediaQuery.of(context).size.width / 2 -
-                      75, // لجعل الصورة في المنتصف
-                  child: Stack(
-                    clipBehavior: Clip.none,
-                    children: [
-                      const CircleAvatar(
-                        radius: 75,
-                        backgroundColor: Colors.white,
-                        child: CircleAvatar(
-                          radius: 70,
-                          backgroundImage: AssetImage(
-                              'assets/images/logo.png'), // استبدل بالمسار الخاص بك
-                        ),
+                  bottom: 0,
+                  right: 10,
+                  child: GestureDetector(
+                    onTap: _pickImage,
+                    child: const CircleAvatar(
+                      radius: 15,
+                      backgroundColor: Color(0xFF2C4874),
+                      child: Icon(
+                        Icons.edit,
+                        color: Colors.white,
+                        size: 15,
                       ),
-                      Positioned(
-                        bottom: 0,
-                        right: 55,
-                        top: 115,
-                        child: GestureDetector(
-                          onTap: () {},
-                          child: const CircleAvatar(
-                            radius: 20,
-                            backgroundColor: Color(0xFF2C4874),
-                            child: Icon(
-                              Icons.edit,
-                              color: Colors.white,
-                              size: 20,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 110), // إضافة فراغ كافي بعد الـ Avatar
-            const Text(
-              "Mario Ebrahim",
-              style: TextStyle(
+            const SizedBox(height: 10),
+            // Name and Email
+            Text(
+              name,
+              style: const TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.w600,
-                fontSize: 18,
+                fontSize: 20,
               ),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 5),
             Container(
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),
-                  color: const Color(0xFF1A2A3F)),
-              child: const Text(
-                "Mario.Ebrahim@gmail.com",
-                style: TextStyle(
+                borderRadius: BorderRadius.circular(15),
+                color: const Color(0xFF1A2A3F),
+              ),
+              child: Text(
+                email,
+                style: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.w600,
-                  fontSize: 18,
+                  fontSize: 16,
                 ),
               ),
             ),
-            const SizedBox(height: 35),
+            const SizedBox(height: 20),
+            // Profile Options
             ProfileRibon(
               leadingIcon: "assets/images/editable.png",
               title: "Edit Profile",
@@ -114,54 +126,66 @@ class PersonScreen extends StatelessWidget {
                     context, EditProfileScreen.routeName);
               },
             ),
+            // Language Option with Dropdown
             Padding(
-              padding: const EdgeInsets.all(15.0),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
               child: Row(
                 children: [
-                  const ImageIcon(AssetImage("assets/images/lang_icon.png"),
-                      color: Colors.white),
+                  const ImageIcon(
+                    AssetImage("assets/images/lang_icon.png"),
+                    color: Colors.white,
+                  ),
                   const SizedBox(width: 10),
                   const Text(
                     "Language",
                     style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w400),
+                      color: Colors.white,
+                      fontSize: 16,
+                    ),
                   ),
                   const Spacer(),
-                  const Text(
-                    "العربية",
-                    style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w400),
+                  DropdownButton<String>(
+                    value: selectedLanguage,
+                    dropdownColor: const Color(0xFF1A2A3F),
+                    onChanged: _changeLanguage,
+                    items: ["English", "اللغة العربية"].map((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(
+                          value,
+                          style: const TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                      );
+                    }).toList(),
                   ),
-                  const SizedBox(width: 7),
-                  InkWell(
-                      onTap: () {},
-                      child: const Icon(Icons.arrow_forward_ios_sharp,
-                          color: Colors.white, size: 22)),
                 ],
               ),
             ),
+            // Dark Mode Option with Toggle
             Padding(
-              padding: const EdgeInsets.all(15.0),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
               child: Row(
                 children: [
-                  const ImageIcon(AssetImage("assets/images/mode.png"),
-                      color: Colors.white),
+                  const ImageIcon(
+                    AssetImage("assets/images/mode.png"),
+                    color: Colors.white,
+                  ),
                   const SizedBox(width: 10),
                   const Text(
                     "Dark Mode",
                     style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w400),
+                      color: Colors.white,
+                      fontSize: 16,
+                    ),
                   ),
                   const Spacer(),
                   Switch(
-                    value: true,
-                    onChanged: (value) {},
+                    value: isDarkMode,
+                    onChanged: _toggleDarkMode,
                     activeColor: Colors.white,
                     activeTrackColor: const Color(0xFF023A87),
                   ),
@@ -176,7 +200,7 @@ class PersonScreen extends StatelessWidget {
             ProfileRibon(
               leadingIcon: "assets/images/logout.png",
               title: "Logout",
-              onTap: () {},
+              onTap: () => _logout(context),
             ),
           ],
         ),
