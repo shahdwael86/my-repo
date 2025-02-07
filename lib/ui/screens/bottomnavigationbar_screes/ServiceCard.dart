@@ -15,8 +15,8 @@ class ServiceCard extends StatelessWidget {
     required this.iconSize,
     required this.fontSize,
     required this.onToggle,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +28,7 @@ class ServiceCard extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(icon, size: iconSize),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(title, style: TextStyle(fontSize: fontSize)),
           ],
         ),

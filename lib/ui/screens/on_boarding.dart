@@ -39,12 +39,12 @@ class _OnBoardingState extends State<OnBoarding> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Location Required'),
-        content: Text('Please enable location services to continue.'),
+        title: const Text('Location Required'),
+        content: const Text('Please enable location services to continue.'),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: Text('OK'),
+            child: const Text('OK'),
           ),
         ],
       ),

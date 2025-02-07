@@ -15,6 +15,7 @@ import 'package:road_helperr/ui/screens/otp_screen.dart';
 import 'package:road_helperr/ui/screens/profile_screen.dart';
 import 'package:road_helperr/ui/screens/signin_screen.dart';
 import 'package:road_helperr/ui/screens/signupScreen.dart';
+import 'package:road_helperr/ui/screens/emergency_contacts.dart'; // إضافة الشاشة الجديدة
 import 'utils/location_service.dart'; // Import the location service
 
 void main() {
@@ -51,12 +52,12 @@ class _MyAppState extends State<MyApp> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Location Required'),
-        content: Text('Please enable location services to continue.'),
+        title: const Text('Location Required'),
+        content: const Text('Please enable location services to continue.'),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: Text('OK'),
+            child: const Text('OK'),
           ),
         ],
       ),
@@ -96,15 +97,22 @@ class _MyAppState extends State<MyApp> {
         MapScreen.routeName: (context) => const MapScreen(),
         NotificationScreen.routeName: (context) => const NotificationScreen(),
         ProfileScreen.routeName: (context) => const ProfileScreen(),
-        OtpScreen.routeName: (context) => OtpScreen(),
+        OtpScreen.routeName: (context) => const OtpScreen(),
         OnBoarding.routeName: (context) => const OnBoarding(),
         OnboardingScreen.routeName: (context) => const OnboardingScreen(),
         OtpExpiredScreen.routeName: (context) => const OtpExpiredScreen(),
-        PersonScreen.routeName: (context) => const PersonScreen(),
+        PersonScreen.routeName: (context) => const PersonScreen(
+              name: '',
+              email: '',
+            ),
         EditProfileScreen.routeName: (context) => const EditProfileScreen(),
-        EmailScreen.routeName: (context) => const EmailScreen()
+        EmailScreen.routeName: (context) => const EmailScreen(),
+        EmergencyContactsScreen.routeName: (context) =>
+            const EmergencyContactsScreen(), // إضافة مسار جديد
       },
+
       initialRoute: OnboardingScreen.routeName,
+      //initialRoute: HomeScreen.routeName,
     );
   }
 }

@@ -8,7 +8,7 @@ import 'package:road_helperr/utils/app_colors.dart' as colo;
 import 'package:road_helperr/utils/text_strings.dart';
 
 class ValidationForm extends StatefulWidget {
-  ValidationForm({super.key});
+  const ValidationForm({super.key});
 
   @override
   _ValidationFormState createState() => _ValidationFormState();
@@ -74,7 +74,7 @@ class _ValidationFormState extends State<ValidationForm> {
                 label: "First Name",
                 hintText: 'First name',
                 validatorIsContinue: (text) {
-                  if (text!.isEmpty || text!.length < 3) {
+                  if (text!.isEmpty || text.length < 3) {
                     return "At least 3 characters";
                   }
                   return null;
@@ -88,7 +88,7 @@ class _ValidationFormState extends State<ValidationForm> {
                 label: "Last Name",
                 hintText: 'Last name',
                 validatorIsContinue: (text) {
-                  if (text!.isEmpty || text!.length < 3) {
+                  if (text!.isEmpty || text.length < 3) {
                     return "At least 3 characters";
                   }
                   return null;
@@ -168,7 +168,7 @@ class _ValidationFormState extends State<ValidationForm> {
                   if (_formKey.currentState!.validate()) {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => OtpScreen()),
+                      MaterialPageRoute(builder: (context) => const OtpScreen()),
                     );
                   }
                 },

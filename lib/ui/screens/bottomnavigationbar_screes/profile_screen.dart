@@ -1,11 +1,11 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:road_helperr/ui/screens/ai_welcome_screen.dart';
+import 'package:road_helperr/ui/screens/bottomnavigationbar_screes/map_screen.dart';
 import 'package:road_helperr/ui/screens/profile_screen.dart';
 import '../../../utils/app_colors.dart';
-import '../ai_chat.dart';
 import 'home_screen.dart';
-import 'map_screen.dart';
 import 'notification_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -136,7 +136,10 @@ class ProfileScreen extends StatelessWidget {
         horizontal: size.width * 0.04,
         vertical: size.height * 0.02,
       ),
-      child: const PersonScreen(),
+      child: const PersonScreen(
+        name: '',
+        email: '',
+      ),
     );
   }
 
@@ -216,7 +219,7 @@ class ProfileScreen extends StatelessWidget {
     final routes = [
       HomeScreen.routeName,
       MapScreen.routeName,
-      AiChat.routeName,
+      AiWelcomeScreen.routeName,
       NotificationScreen.routeName,
       ProfileScreen.routeName,
     ];

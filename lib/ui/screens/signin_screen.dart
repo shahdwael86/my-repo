@@ -150,7 +150,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                   });
                                 },
                                 fillColor:
-                                    MaterialStateProperty.all(Colors.white),
+                                    WidgetStateProperty.all(Colors.white),
                                 checkColor: const Color(0xFF1F3551),
                               ),
                               const Text(
@@ -237,14 +237,14 @@ class InputField extends StatefulWidget {
   final TextEditingController controller;
 
   const InputField({
-    Key? key,
+    super.key,
     required this.icon,
     required this.hintText,
     required this.label,
     this.isPassword = false,
     this.validatorIsContinue,
     required this.controller,
-  }) : super(key: key);
+  });
 
   @override
   State<InputField> createState() => _InputFieldState();

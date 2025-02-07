@@ -1,20 +1,24 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:road_helperr/ui/screens/ai_welcome_screen.dart';
+import 'package:road_helperr/ui/screens/bottomnavigationbar_screes/map_screen.dart';
 import 'package:road_helperr/ui/screens/bottomnavigationbar_screes/profile_screen.dart';
 import 'package:road_helperr/utils/text_strings.dart';
 import '../../../utils/app_colors.dart';
-import '../ai_chat.dart';
 import 'home_screen.dart';
-import 'map_screen.dart';
 
-class NotificationScreen extends StatelessWidget {
+class NotificationScreen extends StatefulWidget {
   static const String routeName = "notification";
-  final int _selectedIndex = 3;
 
   const NotificationScreen({super.key});
 
-  get isTablet => null;
+  @override
+  State<NotificationScreen> createState() => _NotificationScreenState();
+}
+
+class _NotificationScreenState extends State<NotificationScreen> {
+  int _selectedIndex = 3;
 
   @override
   Widget build(BuildContext context) {
@@ -49,10 +53,10 @@ class NotificationScreen extends StatelessWidget {
 
         return platform == TargetPlatform.iOS ||
                 platform == TargetPlatform.macOS
-            ? _buildCupertinoLayout(context, size, constraints, titleSize,
-                subtitleSize, iconSize, navBarHeight, spacing, isDesktop)
-            : _buildMaterialLayout(context, size, constraints, titleSize,
-                subtitleSize, iconSize, navBarHeight, spacing, isDesktop);
+            ? _buildCupertinoLayout(context, size, titleSize, subtitleSize,
+                iconSize, navBarHeight, spacing, isDesktop)
+            : _buildMaterialLayout(context, size, titleSize, subtitleSize,
+                iconSize, navBarHeight, spacing, isDesktop);
       },
     );
   }
@@ -60,7 +64,6 @@ class NotificationScreen extends StatelessWidget {
   Widget _buildMaterialLayout(
     BuildContext context,
     Size size,
-    BoxConstraints constraints,
     double titleSize,
     double subtitleSize,
     double iconSize,
@@ -110,7 +113,6 @@ class NotificationScreen extends StatelessWidget {
   Widget _buildCupertinoLayout(
     BuildContext context,
     Size size,
-    BoxConstraints constraints,
     double titleSize,
     double subtitleSize,
     double iconSize,
@@ -189,12 +191,7 @@ class NotificationScreen extends StatelessWidget {
           children: [
             Image.asset(
               "assets/images/Group 12.png",
-              width: size.width *
-                  (isDesktop
-                      ? 0.3
-                      : isTablet
-                          ? 0.4
-                          : 0.5),
+              width: size.width * (isDesktop ? 0.3 : 0.5),
               fit: BoxFit.contain,
             ),
             SizedBox(height: spacing),
@@ -247,7 +244,12 @@ class NotificationScreen extends StatelessWidget {
               size: iconSize, color: Colors.white),
           Icon(Icons.person_2_outlined, size: iconSize, color: Colors.white),
         ],
-        onTap: (index) => _handleNavigation(context, index),
+        onTap: (index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+          _handleNavigation(context, index);
+        },
       ),
     );
   }
@@ -290,7 +292,12 @@ class NotificationScreen extends StatelessWidget {
             label: 'Profile',
           ),
         ],
-        onTap: (index) => _handleNavigation(context, index),
+        onTap: (index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+          _handleNavigation(context, index);
+        },
       ),
     );
   }
@@ -299,13 +306,13 @@ class NotificationScreen extends StatelessWidget {
     final routes = [
       HomeScreen.routeName,
       MapScreen.routeName,
-      AiChat.routeName,
+      AiWelcomeScreen.routeName,
       NotificationScreen.routeName,
       ProfileScreen.routeName,
     ];
 
-    if (index < routes.length) {
-      Navigator.pushNamed(context, routes[index]);
+    if (index >= 0 && index < routes.length) {
+      Navigator.pushReplacementNamed(context, routes[index]);
     }
   }
 }

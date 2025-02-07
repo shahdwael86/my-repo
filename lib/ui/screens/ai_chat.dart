@@ -5,7 +5,7 @@ import 'package:road_helperr/ui/screens/ai_welcome_screen.dart';
 import 'package:road_helperr/ui/screens/bottomnavigationbar_screes/home_screen.dart';
 import 'package:road_helperr/ui/screens/bottomnavigationbar_screes/map_screen.dart';
 import 'package:road_helperr/ui/screens/bottomnavigationbar_screes/notification_screen.dart';
-import 'package:road_helperr/ui/screens/bottomnavigationbar_screes/profile_screen.dart';
+import '../screens/bottomnavigationbar_screes/profile_screen.dart';
 import 'package:road_helperr/utils/app_colors.dart';
 import 'package:road_helperr/utils/text_strings.dart';
 import '../public_details/card_chat.dart';

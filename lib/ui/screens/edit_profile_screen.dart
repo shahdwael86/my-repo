@@ -122,27 +122,27 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     ),
                   ),
                   SizedBox(height: size.height * 0.02),
-                  EditTextField(
+                  const EditTextField(
                     label: "First Name",
                     icon: Icons.person, // Use IconData here
                     iconSize: 16, // Smaller icon size
                   ),
-                  EditTextField(
+                  const EditTextField(
                     label: "Last Name",
                     icon: Icons.person, // Use IconData here
                     iconSize: 16, // Smaller icon size
                   ),
-                  EditTextField(
+                  const EditTextField(
                     label: "Phone Number",
                     icon: Icons.phone, // Use IconData here
                     iconSize: 16, // Smaller icon size
                   ),
-                  EditTextField(
+                  const EditTextField(
                     label: "Email",
                     icon: Icons.email, // Use IconData here
                     iconSize: 16, // Smaller icon size
                   ),
-                  EditTextField(
+                  const EditTextField(
                     label: "Password",
                     icon: Icons.lock, // Use IconData here
                     iconSize: 16, // Smaller icon size

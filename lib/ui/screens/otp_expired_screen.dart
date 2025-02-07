@@ -112,7 +112,9 @@ class _OtpExpiredScreenState extends State<OtpExpiredScreen>
       opacity: _fadeAnimation,
       child: AdaptiveButton(
         text: 'Request OTP',
-        onPressed: _handleRequestOtp,
+        onPressed: () {
+          Navigator.of(context).pushNamed(OtpScreen.routeName);
+        },
         width: double.infinity,
         height: responsive.buttonHeight,
         maxWidth: responsive.buttonMaxWidth,
@@ -127,7 +129,10 @@ class _OtpExpiredScreenState extends State<OtpExpiredScreen>
     return FadeTransition(
       opacity: _fadeAnimation,
       child: TextButton(
-        onPressed: _handleBackToLogin,
+        onPressed: () {
+          Navigator.of(context).pushNamed(SignInScreen.routeName);
+        },
+        // onPressed: _handleBackToLogin,
         style: TextButton.styleFrom(
           padding: EdgeInsets.all(responsive.padding * 0.5),
         ),

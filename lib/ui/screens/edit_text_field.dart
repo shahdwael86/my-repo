@@ -7,7 +7,7 @@ class EditTextField extends StatelessWidget {
   final TextInputType keyboardType;
   final bool obscureText;
 
-  EditTextField({
+  const EditTextField({
     super.key,
     required this.label,
     required this.icon, // Change to IconData

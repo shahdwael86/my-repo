@@ -12,7 +12,7 @@ class InputField extends StatefulWidget {
   final FocusNode focusNode;
 
   const InputField({
-    Key? key,
+    super.key,
     required this.icon,
     required this.hintText,
     required this.label,
@@ -21,7 +21,7 @@ class InputField extends StatefulWidget {
     this.keyboardType = TextInputType.text,
     required this.controller,
     required this.focusNode,
-  }) : super(key: key);
+  });
 
   @override
   State<InputField> createState() => _InputFieldState();

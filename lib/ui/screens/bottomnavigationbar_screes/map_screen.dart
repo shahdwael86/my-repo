@@ -1,5 +1,6 @@
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:road_helperr/ui/screens/bottomnavigationbar_screes/profile_screen.dart';
 import '../../../utils/app_colors.dart';
@@ -7,11 +8,24 @@ import '../ai_chat.dart';
 import 'home_screen.dart';
 import 'notification_screen.dart';
 
-class MapScreen extends StatelessWidget {
+class MapScreen extends StatefulWidget {
   static const String routeName = "map";
   final int _selectedIndex = 1;
 
   const MapScreen({super.key});
+
+  @override
+  _MapScreenState createState() => _MapScreenState();
+}
+
+class _MapScreenState extends State<MapScreen> {
+  late GoogleMapController mapController;
+
+  final LatLng _center = const LatLng(30.0444, 31.2357); // Cairo coordinates
+
+  void _onMapCreated(GoogleMapController controller) {
+    mapController = controller;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -145,25 +159,11 @@ class MapScreen extends StatelessWidget {
     double titleSize,
     bool isDesktop,
   ) {
-    final platform = Theme.of(context).platform;
-    final isIOS =
-        platform == TargetPlatform.iOS || platform == TargetPlatform.macOS;
-
-    return Center(
-      child: Container(
-        constraints: BoxConstraints(
-          maxWidth: isDesktop ? 1200 : 800,
-        ),
-        padding: EdgeInsets.all(size.width * 0.04),
-        child: Text(
-          'Welcome to map screen',
-          style: TextStyle(
-            fontSize: titleSize,
-            fontWeight: FontWeight.w500,
-            fontFamily: isIOS ? '.SF Pro Text' : null,
-          ),
-          textAlign: TextAlign.center,
-        ),
+    return GoogleMap(
+      onMapCreated: _onMapCreated,
+      initialCameraPosition: CameraPosition(
+        target: _center,
+        zoom: 11.0,
       ),
     );
   }
@@ -183,7 +183,7 @@ class MapScreen extends StatelessWidget {
         color: AppColors.backGroundColor,
         animationDuration: const Duration(milliseconds: 300),
         height: navBarHeight,
-        index: _selectedIndex,
+        index: widget._selectedIndex,
         items: [
           Icon(Icons.home_outlined, size: iconSize, color: Colors.white),
           Icon(Icons.location_on_outlined, size: iconSize, color: Colors.white),
@@ -212,7 +212,7 @@ class MapScreen extends StatelessWidget {
         activeColor: Colors.white,
         inactiveColor: Colors.white.withOpacity(0.6),
         height: navBarHeight,
-        currentIndex: _selectedIndex,
+        currentIndex: widget._selectedIndex,
         items: [
           BottomNavigationBarItem(
             icon: Icon(CupertinoIcons.home, size: iconSize),

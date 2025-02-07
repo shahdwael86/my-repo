@@ -3,6 +3,12 @@
 <plist version="1.0">
 <dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>نحتاج إلى الوصول إلى موقعك لإرسال إحداثيات الطوارئ.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>نحتاج إلى الوصول إلى موقعك لإرسال إحداثيات الطوارئ.</string>
+	<key>NSContactsUsageDescription</key>
+	<string>نحتاج إلى الوصول إلى جهات الاتصال لإرسال رسائل الطوارئ.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>We need your location to provide better services.</string>
 	<key>NSLocationAlwaysUsageDescription</key>	
 	<string>We need your location to provide better services.</string>

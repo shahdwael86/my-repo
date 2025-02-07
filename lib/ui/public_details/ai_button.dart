@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:gradient_slide_to_act/gradient_slide_to_act.dart';
 import 'package:road_helperr/ui/screens/ai_chat.dart';
-import 'package:road_helperr/ui/screens/ai_welcome_screen.dart';
 import 'package:road_helperr/utils/app_colors.dart';
 import 'package:road_helperr/utils/text_strings.dart';
 import 'package:road_helperr/utils/responsive_helper.dart';
@@ -221,8 +220,8 @@ class AiButton extends StatelessWidget {
     Navigator.push(
       context,
       platform == TargetPlatform.iOS || platform == TargetPlatform.macOS
-          ? CupertinoPageRoute(builder: (context) => const AiWelcomeScreen())
-          : MaterialPageRoute(builder: (context) => const AiWelcomeScreen()),
+          ? CupertinoPageRoute(builder: (context) => const AiChat())
+          : MaterialPageRoute(builder: (context) => const AiChat()),
     );
   }
 }

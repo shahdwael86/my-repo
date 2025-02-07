@@ -46,9 +46,9 @@ class _SignupScreenState extends State<SignupScreen> {
                   topRight: Radius.circular(20),
                 ),
               ),
-              child: SingleChildScrollView(
+              child: const SingleChildScrollView(
                 child: Padding(
-                  padding: const EdgeInsets.all(16.0),
+                  padding: EdgeInsets.all(16.0),
                   child: ValidationForm(),
                 ),
               ),

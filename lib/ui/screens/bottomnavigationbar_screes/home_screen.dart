@@ -1,14 +1,18 @@
+import 'dart:convert';
+
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:road_helperr/ui/screens/ai_welcome_screen.dart';
+import 'package:road_helperr/ui/screens/bottomnavigationbar_screes/map_screen.dart';
 import 'package:road_helperr/ui/screens/bottomnavigationbar_screes/profile_screen.dart';
 import 'package:road_helperr/utils/app_colors.dart';
 import 'package:road_helperr/utils/text_strings.dart';
-import '../ai_chat.dart';
-import 'map_screen.dart';
 import 'notification_screen.dart';
+import 'package:http/http.dart' as http;
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -19,7 +23,9 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int _selectedIndex = 0;
+  final int _selectedIndex = 0;
+  int pressCount = 0;
+  Set<Marker> _markers = <Marker>{};
 
   final Map<String, bool> serviceStates = {
     TextStrings.homeGas: false,
@@ -29,6 +35,91 @@ class _HomeScreenState extends State<HomeScreen> {
     TextStrings.homeMaintenance: false,
     TextStrings.homeWinch: false,
   };
+  double? currentLatitude;
+  double? currentLongitude;
+// عندما يغير اليوزر حالة الفلتر
+  void toggleFilter(String key, bool value) {
+    setState(() {
+      serviceStates[key] = value;
+    });
+    print("Filter changed: $key -> $value");
+  }
+
+  Future<void> getFilteredServices() async {
+// جمع الفلاتر المختارة من الخدمة
+    List<String> selectedKeys = serviceStates.entries
+        .where((entry) => entry.value) // اختار فقط الفلاتر المفعلة
+        .map((entry) => entry.key)
+        .toList();
+
+    print("Selected filters: $selectedKeys"); // هنا هتشوف الفلاتر المرسلة
+
+// لو اليوزر ما اختاروش أي فلتر
+    if (selectedKeys.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please select at least one service!")),
+      );
+      return;
+    }
+
+// بناء الرابط لإرسال الفلاتر إلى الـ API
+    String placeTypes = selectedKeys.map((e) {
+      switch (e) {
+        case 'homeGas':
+          return 'gas_station';
+        case 'homePolice':
+          return 'police';
+        case 'homeFire':
+          return 'fire_station';
+        case 'homeHospital':
+          return 'hospital';
+        case 'homeMaintenance':
+          return 'maintenance';
+        case 'homeWinch':
+          return 'tow_truck';
+        default:
+          return '';
+      }
+    }).join('|'); // دمج الفلاتر المختارة بفاصل "|"
+
+// ارسال الريكويست للـ API جوجل ماب
+    var response = await http.get(
+      Uri.parse(
+        "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=$currentLatitude,$currentLongitude&radius=5000&type=$placeTypes&key=AIzaSyDrP9YA-D4xFrLi-v1klPXvtoEuww6kmBo",
+      ),
+    );
+
+// معالجة البيانات المسترجعة من الـ API
+    if (response.statusCode == 200) {
+      var data = jsonDecode(response.body);
+      print("Filtered Data: $data"); // هنا هتشوف الرد من الـ API
+      // استخدم البيانات المسترجعة لعرضها في الخريطة
+      _updateMapWithFilteredData(data);
+    } else {
+      print("Error fetching data!");
+    }
+  }
+
+// هنا دالة لتحديث الماب بالبيانات الجديدة بعد الفلترة
+  void _updateMapWithFilteredData(var data) {
+// إظهار الأماكن التي تطابق الفلتر
+    Set<Marker> filteredMarkers = <Marker>{};
+
+    for (var result in data['results']) {
+      var marker = Marker(
+        markerId: MarkerId(result['place_id']),
+        position: LatLng(result['geometry']['location']['lat'],
+            result['geometry']['location']['lng']),
+        infoWindow: InfoWindow(title: result['name']),
+      );
+      filteredMarkers.add(marker);
+    }
+
+    setState(() {
+      // تحديث الـ markers في الخريطة
+      _markers = filteredMarkers; // التأكد من أن _markers هو من نوع Set<Marker>
+    });
+  }
 
   int selectedServicesCount = 0;
   String location = "Fetching location...";
@@ -84,6 +175,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _navigateToMap(BuildContext context) {
     if (selectedServicesCount >= 1 && selectedServicesCount <= 3) {
+      getFilteredServices();
       Navigator.pushNamed(context, MapScreen.routeName);
     } else {
       _showWarningDialog(context);
@@ -188,7 +280,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       body: SingleChildScrollView(
-        // إضافة SingleChildScrollView للتمرير
+// إضافة SingleChildScrollView للتمرير
         child: _buildBody(
             context, constraints, size, titleSize, iconSize, padding),
       ),
@@ -234,7 +326,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       child: SafeArea(
         child: SingleChildScrollView(
-          // إضافة SingleChildScrollView للتمرير
+// إضافة SingleChildScrollView للتمرير
           child: Column(
             children: [
               _buildBody(
@@ -434,7 +526,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final routes = [
       HomeScreen.routeName,
       MapScreen.routeName,
-      AiChat.routeName,
+      AiWelcomeScreen.routeName,
       NotificationScreen.routeName,
       ProfileScreen.routeName,
     ];
