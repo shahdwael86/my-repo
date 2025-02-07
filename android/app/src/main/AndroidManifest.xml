@@ -13,6 +13,11 @@
     <application
         android:label="road_helperr"
         android:icon="@mipmap/ic_launcher">
+
+        <!-- مفتاح API الخاص بـ Google Maps (يُفضل تخزينه بأمان) -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDrP9YA-D4xFrLi-v1klPXvtoEuww6kmBo"/>
         
         <activity
             android:name=".MainActivity"
@@ -23,12 +28,6 @@
             android:configChanges="orientation|keyboardHidden|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
             android:hardwareAccelerated="true"
             android:windowSoftInputMode="adjustResize">
-            
-            <!-- مفتاح API الخاص بـ Google Maps (يُفضل تخزينه بأمان) -->
-           <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDrP9YA-D4xFrLi-v1klPXvtoEuww6kmBo"/>
-
 
             <meta-data
                 android:name="io.flutter.embedding.android.NormalTheme"

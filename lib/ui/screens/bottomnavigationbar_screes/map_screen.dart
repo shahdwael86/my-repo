@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:geolocator/geolocator.dart'; // Add this import
 import 'package:road_helperr/ui/screens/bottomnavigationbar_screes/profile_screen.dart';
 import '../../../utils/app_colors.dart';
-import '../ai_chat.dart';
+import '../ai_welcome_screen.dart';
 import 'home_screen.dart';
 import 'notification_screen.dart';
 
 class MapScreen extends StatefulWidget {
   static const String routeName = "map";
-  final int _selectedIndex = 1;
 
   const MapScreen({super.key});
 
@@ -20,8 +20,56 @@ class MapScreen extends StatefulWidget {
 
 class _MapScreenState extends State<MapScreen> {
   late GoogleMapController mapController;
+  LatLng _currentLocation = const LatLng(30.0444, 31.2357); // Default to Cairo
+  bool _isLoading = true; // To show loading state
+  int _selectedIndex = 1; // Moved _selectedIndex here
 
-  final LatLng _center = const LatLng(30.0444, 31.2357); // Cairo coordinates
+  @override
+  void initState() {
+    super.initState();
+    _getCurrentLocation(); // Fetch current location when the screen loads
+  }
+
+  // Function to get current location
+  Future<void> _getCurrentLocation() async {
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      // Location services are not enabled, show a message to the user
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Location services are disabled.')),
+      );
+      return;
+    }
+
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        // Permissions are denied, show a message to the user
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Location permissions are denied.')),
+        );
+        return;
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      // Permissions are permanently denied, show a message to the user
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Location permissions are permanently denied.'),
+        ),
+      );
+      return;
+    }
+
+    // Get the current position
+    Position position = await Geolocator.getCurrentPosition();
+    setState(() {
+      _currentLocation = LatLng(position.latitude, position.longitude);
+      _isLoading = false; // Stop loading
+    });
+  }
 
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
@@ -95,7 +143,9 @@ class _MapScreenState extends State<MapScreen> {
         toolbarHeight: navBarHeight,
       ),
       backgroundColor: Colors.yellow,
-      body: _buildBody(context, size, constraints, titleSize, isDesktop),
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator()) // Show loading
+          : _buildBody(context, size, constraints, titleSize, isDesktop),
       bottomNavigationBar: _buildMaterialNavBar(
         context,
         iconSize,
@@ -137,8 +187,11 @@ class _MapScreenState extends State<MapScreen> {
         child: Column(
           children: [
             Expanded(
-              child:
-                  _buildBody(context, size, constraints, titleSize, isDesktop),
+              child: _isLoading
+                  ? const Center(
+                      child: CupertinoActivityIndicator()) // Show loading
+                  : _buildBody(
+                      context, size, constraints, titleSize, isDesktop),
             ),
             _buildCupertinoNavBar(
               context,
@@ -162,9 +215,11 @@ class _MapScreenState extends State<MapScreen> {
     return GoogleMap(
       onMapCreated: _onMapCreated,
       initialCameraPosition: CameraPosition(
-        target: _center,
-        zoom: 11.0,
+        target: _currentLocation, // Use current location
+        zoom: 15.0, // Adjust zoom level as needed
       ),
+      myLocationEnabled: true, // Show user's location on the map
+      myLocationButtonEnabled: true, // Show button to center on user's location
     );
   }
 
@@ -183,7 +238,7 @@ class _MapScreenState extends State<MapScreen> {
         color: AppColors.backGroundColor,
         animationDuration: const Duration(milliseconds: 300),
         height: navBarHeight,
-        index: widget._selectedIndex,
+        index: _selectedIndex, // Use _selectedIndex from State
         items: [
           Icon(Icons.home_outlined, size: iconSize, color: Colors.white),
           Icon(Icons.location_on_outlined, size: iconSize, color: Colors.white),
@@ -212,7 +267,7 @@ class _MapScreenState extends State<MapScreen> {
         activeColor: Colors.white,
         inactiveColor: Colors.white.withOpacity(0.6),
         height: navBarHeight,
-        currentIndex: widget._selectedIndex,
+        currentIndex: _selectedIndex, // Use _selectedIndex from State
         items: [
           BottomNavigationBarItem(
             icon: Icon(CupertinoIcons.home, size: iconSize),
@@ -241,10 +296,14 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   void _handleNavigation(BuildContext context, int index) {
+    setState(() {
+      _selectedIndex = index; // Update the selected index
+    });
+
     final routes = [
       HomeScreen.routeName,
       MapScreen.routeName,
-      AiChat.routeName,
+      AiWelcomeScreen.routeName,
       NotificationScreen.routeName,
       ProfileScreen.routeName,
     ];
