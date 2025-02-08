@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:road_helperr/ui/public_details/input_field.dart' as INp;
 import 'package:road_helperr/ui/public_details/main_button.dart' as bum;
 import 'package:road_helperr/ui/public_details/or_border.dart' as or_bbr;
-import 'package:road_helperr/ui/screens/otp_screen.dart';
+import 'package:road_helperr/ui/screens/car_settings_screen.dart';
+//import 'package:road_helperr/ui/screens/otp_screen.dart';
 import 'package:road_helperr/ui/screens/signin_screen.dart';
 import 'package:road_helperr/utils/app_colors.dart' as colo;
 import 'package:road_helperr/utils/text_strings.dart';
@@ -163,12 +164,13 @@ class _ValidationFormState extends State<ValidationForm> {
               ),
               const SizedBox(height: 20),
               bum.MainButton(
-                textButton: TextStrings.textButton,
+                textButton: TextStrings.textButton3,
                 onPress: () {
                   if (_formKey.currentState!.validate()) {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const OtpScreen()),
+                      MaterialPageRoute(
+                          builder: (context) => const CarSettingsScreen()),
                     );
                   }
                 },

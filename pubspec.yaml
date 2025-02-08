@@ -28,6 +28,7 @@ dependencies:
   permission_handler: ^11.0.0 # تحديث
   location: ^5.0.0 # تحديث
   flutter_polyline_points: ^2.0.0 # تحديث
+  flutter_launcher_icons: ^0.9.2
 
 dev_dependencies:
   flutter_test:
@@ -43,3 +44,7 @@ flutter:
     - assets/videos/1.mp4
     - assets/videos/2.mp4
     - assets/videos/3.mp4
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/icon/icon.png"

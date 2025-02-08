@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:geolocator/geolocator.dart'; // Add this import
+import 'package:geolocator/geolocator.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import 'package:road_helperr/ui/screens/bottomnavigationbar_screes/profile_screen.dart';
 import '../../../utils/app_colors.dart';
 import '../ai_welcome_screen.dart';
@@ -23,11 +25,18 @@ class _MapScreenState extends State<MapScreen> {
   LatLng _currentLocation = const LatLng(30.0444, 31.2357); // Default to Cairo
   bool _isLoading = true; // To show loading state
   int _selectedIndex = 1; // Moved _selectedIndex here
+  Set<Marker> _markers = {}; // Markers to show on the map
+
+  // Variables to store filter options
+  Map<String, bool>? _filters;
 
   @override
-  void initState() {
-    super.initState();
-    _getCurrentLocation(); // Fetch current location when the screen loads
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Get filter options from HomeScreen
+    _filters = ModalRoute.of(context)!.settings.arguments as Map<String, bool>?;
+    print("Received Filters: $_filters"); // Print received filters
+    _getCurrentLocation();
   }
 
   // Function to get current location
@@ -68,6 +77,87 @@ class _MapScreenState extends State<MapScreen> {
     setState(() {
       _currentLocation = LatLng(position.latitude, position.longitude);
       _isLoading = false; // Stop loading
+    });
+
+    // Fetch nearby places based on filters
+    if (_filters != null) {
+      _fetchNearbyPlaces(position.latitude, position.longitude);
+    }
+  }
+
+  // Function to fetch nearby places using Google Places API
+  Future<void> _fetchNearbyPlaces(double latitude, double longitude) async {
+    // Convert filters to Google Places API types
+    List<String> selectedTypes = _filters!.entries
+        .where((entry) => entry.value) // Only selected filters
+        .map((entry) {
+          switch (entry.key) {
+            case 'homeGas':
+              return 'gas_station';
+            case 'homePolice':
+              return 'police';
+            case 'homeFire':
+              return 'fire_station';
+            case 'homeHospital':
+              return 'hospital';
+            case 'homeMaintenance':
+              return 'car_repair';
+            case 'homeWinch':
+              return 'tow_truck';
+            default:
+              return '';
+          }
+        })
+        .where((type) => type.isNotEmpty) // Remove empty types
+        .toList();
+
+    if (selectedTypes.isEmpty) {
+      print("No filters selected!"); // Print if no filters are selected
+      return; // No filters selected
+    }
+
+    // Build the API request URL
+    String types = selectedTypes.join('|'); // Combine types with "|"
+    String apiKey =
+        'AIzaSyDrP9YA-D4xFrLi-v1klPXvtoEuww6kmBo'; // Replace with your API key
+    String url =
+        "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=$latitude,$longitude&radius=5000&type=$types&key=$apiKey";
+
+    // Make the API request
+    print("API URL: $url"); // Print the API URL
+
+    // Send the request
+    var response = await http.get(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      var data = jsonDecode(response.body);
+      print("API Response: $data"); // Print the API response
+      _updateMapWithPlaces(data['results']);
+    } else {
+      print("Error fetching data!");
+    }
+  }
+
+  // Function to update the map with nearby places
+  void _updateMapWithPlaces(List<dynamic> places) {
+    Set<Marker> markers = {};
+
+    for (var place in places) {
+      double lat = place['geometry']['location']['lat'];
+      double lng = place['geometry']['location']['lng'];
+      String name = place['name'];
+
+      markers.add(
+        Marker(
+          markerId: MarkerId(place['place_id']),
+          position: LatLng(lat, lng),
+          infoWindow: InfoWindow(title: name),
+        ),
+      );
+    }
+
+    setState(() {
+      _markers = markers;
     });
   }
 
@@ -218,6 +308,7 @@ class _MapScreenState extends State<MapScreen> {
         target: _currentLocation, // Use current location
         zoom: 15.0, // Adjust zoom level as needed
       ),
+      markers: _markers, // Add markers to the map
       myLocationEnabled: true, // Show user's location on the map
       myLocationButtonEnabled: true, // Show button to center on user's location
     );

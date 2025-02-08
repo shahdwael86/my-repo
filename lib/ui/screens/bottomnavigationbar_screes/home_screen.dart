@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -37,7 +36,8 @@ class _HomeScreenState extends State<HomeScreen> {
   };
   double? currentLatitude;
   double? currentLongitude;
-// عندما يغير اليوزر حالة الفلتر
+
+  // عندما يغير اليوزر حالة الفلتر
   void toggleFilter(String key, bool value) {
     setState(() {
       serviceStates[key] = value;
@@ -46,7 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> getFilteredServices() async {
-// جمع الفلاتر المختارة من الخدمة
+    // جمع الفلاتر المختارة من الخدمة
     List<String> selectedKeys = serviceStates.entries
         .where((entry) => entry.value) // اختار فقط الفلاتر المفعلة
         .map((entry) => entry.key)
@@ -54,7 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     print("Selected filters: $selectedKeys"); // هنا هتشوف الفلاتر المرسلة
 
-// لو اليوزر ما اختاروش أي فلتر
+    // لو اليوزر ما اختاروش أي فلتر
     if (selectedKeys.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Please select at least one service!")),
@@ -62,7 +62,7 @@ class _HomeScreenState extends State<HomeScreen> {
       return;
     }
 
-// بناء الرابط لإرسال الفلاتر إلى الـ API
+    // بناء الرابط لإرسال الفلاتر إلى الـ API
     String placeTypes = selectedKeys.map((e) {
       switch (e) {
         case 'homeGas':
@@ -74,7 +74,7 @@ class _HomeScreenState extends State<HomeScreen> {
         case 'homeHospital':
           return 'hospital';
         case 'homeMaintenance':
-          return 'maintenance';
+          return 'car_repair';
         case 'homeWinch':
           return 'tow_truck';
         default:
@@ -82,14 +82,14 @@ class _HomeScreenState extends State<HomeScreen> {
       }
     }).join('|'); // دمج الفلاتر المختارة بفاصل "|"
 
-// ارسال الريكويست للـ API جوجل ماب
+    // ارسال الريكويست للـ API جوجل ماب
     var response = await http.get(
       Uri.parse(
         "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=$currentLatitude,$currentLongitude&radius=5000&type=$placeTypes&key=AIzaSyDrP9YA-D4xFrLi-v1klPXvtoEuww6kmBo",
       ),
     );
 
-// معالجة البيانات المسترجعة من الـ API
+    // معالجة البيانات المسترجعة من الـ API
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
       print("Filtered Data: $data"); // هنا هتشوف الرد من الـ API
@@ -100,9 +100,9 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-// هنا دالة لتحديث الماب بالبيانات الجديدة بعد الفلترة
+  // هنا دالة لتحديث الماب بالبيانات الجديدة بعد الفلترة
   void _updateMapWithFilteredData(var data) {
-// إظهار الأماكن التي تطابق الفلتر
+    // إظهار الأماكن التي تطابق الفلتر
     Set<Marker> filteredMarkers = <Marker>{};
 
     for (var result in data['results']) {
@@ -134,6 +134,11 @@ class _HomeScreenState extends State<HomeScreen> {
     try {
       Position position = await Geolocator.getCurrentPosition(
           desiredAccuracy: LocationAccuracy.high);
+      setState(() {
+        currentLatitude = position.latitude;
+        currentLongitude = position.longitude;
+      });
+
       List<Placemark> placemarks =
           await placemarkFromCoordinates(position.latitude, position.longitude);
 
@@ -175,8 +180,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _navigateToMap(BuildContext context) {
     if (selectedServicesCount >= 1 && selectedServicesCount <= 3) {
+      print("Selected Filters: $serviceStates"); // Print selected filters
       getFilteredServices();
-      Navigator.pushNamed(context, MapScreen.routeName);
+      Navigator.pushNamed(
+        context,
+        MapScreen.routeName,
+        arguments: serviceStates, // إرسال اختيارات الفلترة
+      );
     } else {
       _showWarningDialog(context);
     }
@@ -280,7 +290,6 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       body: SingleChildScrollView(
-// إضافة SingleChildScrollView للتمرير
         child: _buildBody(
             context, constraints, size, titleSize, iconSize, padding),
       ),
@@ -326,7 +335,6 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       child: SafeArea(
         child: SingleChildScrollView(
-// إضافة SingleChildScrollView للتمرير
           child: Column(
             children: [
               _buildBody(
@@ -392,8 +400,8 @@ class _HomeScreenState extends State<HomeScreen> {
               : 2,
       mainAxisSpacing: padding,
       crossAxisSpacing: padding,
-      shrinkWrap: true, // لجعل GridView قابلة للتمرير
-      physics: const NeverScrollableScrollPhysics(), // لمنع التمرير المزدوج
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
       children: serviceStates.entries.map((entry) {
         return ServiceCard(
           title: entry.key,

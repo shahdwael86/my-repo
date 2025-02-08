@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:road_helperr/ui/screens/new_password_screen.dart';
 import 'dart:async';
 import 'constants.dart';
 
@@ -83,7 +84,7 @@ class _OtpScreenState extends State<Otp> with SingleTickerProviderStateMixin {
         width: double.infinity,
         decoration: const BoxDecoration(gradient: AppColors.primaryGradient),
         child: SafeArea(
-          child:SingleChildScrollView(
+          child: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -136,7 +137,15 @@ class _OtpScreenState extends State<Otp> with SingleTickerProviderStateMixin {
                 ),
                 const SizedBox(height: 20),
                 ElevatedButton(
-                  onPressed: _isVerifyEnabled ? _verifyOtp : null,
+                  onPressed: _isVerifyEnabled
+                      ? () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => NewPasswordScreen()),
+                          );
+                        }
+                      : null,
                   style: ElevatedButton.styleFrom(
                     backgroundColor:
                         _isVerifyEnabled ? Colors.blue : Colors.white,
@@ -154,7 +163,9 @@ class _OtpScreenState extends State<Otp> with SingleTickerProviderStateMixin {
                 TextButton(
                   onPressed: _isResendEnabled ? _resendOtp : null,
                   child: Text(
-                    _isResendEnabled ? "Resend OTP" : "Resend in $_timeLeft sec",
+                    _isResendEnabled
+                        ? "Resend OTP"
+                        : "Resend in $_timeLeft sec",
                     style: TextStyle(
                       color: _isResendEnabled ? Colors.white : Colors.grey,
                       fontWeight: FontWeight.bold,

@@ -1,5 +1,3 @@
-//
-
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:road_helperr/ui/screens/bottomnavigationbar_screes/home_screen.dart';
@@ -230,6 +228,7 @@ class _OtpScreenState extends State<OtpScreen> {
             .every((controller) => controller.text.isNotEmpty);
 
         if (isOtpComplete) {
+          _timer.cancel(); // إيقاف التايمر هنا
           Navigator.pushNamed(context, HomeScreen.routeName);
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -253,8 +252,6 @@ class AppColors {
   static const Color textColor = Color(0xFFA4A4A4);
   static const Color primaryButtonColor = Color(0xFF023A87);
 }
-
-
 
 
 
