@@ -206,7 +206,7 @@ class _CarSettingsScreenState extends State<CarSettingsScreen> {
                         TextFormField(
                           style: TextStyle(color: textColor),
                           decoration: InputDecoration(
-                            hintText: 'Enter 7 digits',
+                            hintText: 'Enter Plate Number',
                             hintStyle:
                                 TextStyle(color: Colors.grey.withOpacity(0.5)),
                             enabledBorder: OutlineInputBorder(
@@ -227,8 +227,8 @@ class _CarSettingsScreenState extends State<CarSettingsScreen> {
                             if (value == null || value.isEmpty) {
                               return 'Please enter numbers';
                             }
-                            if (value.length != 7) {
-                              return 'Must be 7 digits';
+                            if ((value.length <= 1 && value.length <= 7)) {
+                              return 'Must be at least 1 Number and max 7 digits';
                             }
                             return null;
                           },
@@ -428,7 +428,7 @@ class _CarSettingsScreenState extends State<CarSettingsScreen> {
                                 Icon(Icons.numbers, color: accentColor),
                                 const SizedBox(width: 10),
                                 Text(
-                                  'Numbers (7 Digits)',
+                                  'Plate Numbers',
                                   style: TextStyle(
                                     color: textColor,
                                     fontSize: 16,
@@ -442,7 +442,7 @@ class _CarSettingsScreenState extends State<CarSettingsScreen> {
                               focusNode: _numbersFocus,
                               style: TextStyle(color: textColor),
                               decoration: InputDecoration(
-                                hintText: 'Enter 7 digits',
+                                hintText: 'Enter Plate Number',
                                 hintStyle: TextStyle(
                                     color: Colors.grey.withOpacity(0.5)),
                                 enabledBorder: OutlineInputBorder(
@@ -463,8 +463,8 @@ class _CarSettingsScreenState extends State<CarSettingsScreen> {
                                 if (value == null || value.isEmpty) {
                                   return 'Please enter numbers';
                                 }
-                                if (value.length != 7) {
-                                  return 'Must be 7 digits';
+                                if ((value.length <= 1 && value.length <= 7)) {
+                                  return 'Must be at least 1 Number and max 7 digits';
                                 }
                                 return null;
                               },

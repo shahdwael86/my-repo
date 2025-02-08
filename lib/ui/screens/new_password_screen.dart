@@ -417,10 +417,12 @@ class _NewPasswordScreenState extends State<NewPasswordScreen>
             CupertinoDialogAction(
               isDefaultAction: true,
               onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
-                Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(builder: (context) => SignInScreen()),
-                ); // Navigate to SignInScreen
+                Navigator.of(context).pushAndRemoveUntil(
+                  CupertinoPageRoute(
+                    builder: (context) => const SignInScreen(),
+                  ),
+                  (Route<dynamic> route) => false,
+                );
               },
               child: const Text('Done'),
             ),
@@ -492,8 +494,12 @@ class _NewPasswordScreenState extends State<NewPasswordScreen>
                       elevation: 4,
                     ),
                     onPressed: () {
-                      Navigator.of(context).pop();
-                      Navigator.of(context).pop();
+                      Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(
+                          builder: (context) => const SignInScreen(),
+                        ),
+                        (Route<dynamic> route) => false,
+                      );
                     },
                     child: const Text(
                       'Done',
