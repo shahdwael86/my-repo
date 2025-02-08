@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'signin_screen.dart';
 
 class NewPasswordScreen extends StatefulWidget {
   const NewPasswordScreen({super.key});
@@ -416,8 +417,10 @@ class _NewPasswordScreenState extends State<NewPasswordScreen>
             CupertinoDialogAction(
               isDefaultAction: true,
               onPressed: () {
-                Navigator.of(context).pop();
-                Navigator.of(context).pop();
+                Navigator.of(context).pop(); // Close the dialog
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => SignInScreen()),
+                ); // Navigate to SignInScreen
               },
               child: const Text('Done'),
             ),
