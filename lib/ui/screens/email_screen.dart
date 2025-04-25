@@ -4,6 +4,7 @@ import 'package:road_helperr/ui/screens/signupScreen.dart';
 import 'dart:math' show min;
 import 'constants.dart';
 import 'OTPscreen.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class EmailScreen extends StatefulWidget {
   static const String routeName = "emailscreen";
@@ -66,20 +67,22 @@ class _EmailScreenState extends State<EmailScreen>
   }
 
   bool _isValidEmail(String email) {
+    var lang = AppLocalizations.of(context)!;
     return RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(email);
   }
 
   void _showErrorMessage() {
+    var lang = AppLocalizations.of(context)!;
     final platform = Theme.of(context).platform;
     if (platform == TargetPlatform.iOS) {
       showCupertinoDialog(
         context: context,
         builder: (context) => CupertinoAlertDialog(
-          title: const Text('Invalid Email'),
-          content: const Text('Please enter a valid email address'),
+          title:  Text(lang.invalidEmail),
+          content:  Text(lang.pleaseEnterAValidEmailAddress),
           actions: [
             CupertinoDialogAction(
-              child: const Text('OK'),
+              child:  Text(lang.ok),
               onPressed: () => Navigator.pop(context),
             ),
           ],
@@ -87,8 +90,8 @@ class _EmailScreenState extends State<EmailScreen>
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please enter a valid email address'),
+         SnackBar(
+          content: Text(lang.pleaseEnterAValidEmailAddress),
           backgroundColor: AppColors.errorRed,
         ),
       );
@@ -173,6 +176,7 @@ class _EmailScreenState extends State<EmailScreen>
   }
 
   Widget _buildHeaderTexts(Size size) {
+    var lang = AppLocalizations.of(context)!;
     return Container(
       margin: EdgeInsets.symmetric(vertical: size.height * 0.03),
       child: Column(
@@ -180,7 +184,7 @@ class _EmailScreenState extends State<EmailScreen>
           FittedBox(
             fit: BoxFit.scaleDown,
             child: Text(
-              'OTP Verification',
+              lang.otpVerification,
               style: TextStyle(
                 color: AppColors.white,
                 fontSize: min(size.width * 0.06, 24),
@@ -192,7 +196,7 @@ class _EmailScreenState extends State<EmailScreen>
           FittedBox(
             fit: BoxFit.scaleDown,
             child: Text(
-              'We will send you an One Time Password\non your email address',
+              lang.weWillSendYouAnOneTimePasswordOnYourEmailAddress,
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: AppColors.white.withOpacity(0.7),
@@ -206,6 +210,7 @@ class _EmailScreenState extends State<EmailScreen>
   }
 
   Widget _buildEmailInput(Size size, bool isIOS) {
+    var lang = AppLocalizations.of(context)!;
     return Container(
       constraints: const BoxConstraints(maxWidth: 400),
       decoration: BoxDecoration(
@@ -222,7 +227,7 @@ class _EmailScreenState extends State<EmailScreen>
                 color: AppColors.white,
                 fontSize: min(size.width * 0.04, 16),
               ),
-              placeholder: 'Enter your email',
+              placeholder: lang.enterYourEmail,
               placeholderStyle: TextStyle(
                 color: AppColors.white.withOpacity(0.5),
                 fontSize: min(size.width * 0.04, 16),
@@ -244,7 +249,7 @@ class _EmailScreenState extends State<EmailScreen>
                 fontSize: min(size.width * 0.04, 16),
               ),
               decoration: InputDecoration(
-                hintText: 'Enter your email',
+                hintText: lang.enterYourEmail,
                 hintStyle: TextStyle(
                   color: AppColors.white.withOpacity(0.5),
                   fontSize: min(size.width * 0.04, 16),
@@ -261,6 +266,7 @@ class _EmailScreenState extends State<EmailScreen>
   }
 
   Widget _buildGetOTPButton(Size size, bool isIOS) {
+    var lang = AppLocalizations.of(context)!;
     return Container(
       constraints: const BoxConstraints(maxWidth: 400),
       height: 48,
@@ -271,7 +277,7 @@ class _EmailScreenState extends State<EmailScreen>
               borderRadius: BorderRadius.circular(12),
               onPressed: _validateAndNavigate,
               child: Text(
-                'Get OTP',
+                lang.getOtp,
                 style: TextStyle(
                   fontSize: min(size.width * 0.04, 16),
                   fontWeight: FontWeight.bold,
@@ -287,7 +293,7 @@ class _EmailScreenState extends State<EmailScreen>
                 ),
               ),
               child: Text(
-                'Get OTP',
+                lang.getOtp,
                 style: TextStyle(
                   fontSize: min(size.width * 0.04, 16),
                   fontWeight: FontWeight.bold,
@@ -298,6 +304,7 @@ class _EmailScreenState extends State<EmailScreen>
   }
 
   Widget _buildRegisterLink(Size size) {
+    var lang = AppLocalizations.of(context)!;
     return Container(
       margin: EdgeInsets.only(top: size.height * 0.02),
       child: Center(
@@ -312,7 +319,7 @@ class _EmailScreenState extends State<EmailScreen>
             );
           },
           child: Text(
-            "Don't Have An Account? Register",
+            lang.dontHaveAnAccountRegister,
             style: TextStyle(
               color: AppColors.white.withOpacity(0.7),
               fontSize: min(size.width * 0.035, 14),

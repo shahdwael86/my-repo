@@ -4,6 +4,7 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:road_helperr/ui/screens/new_password_screen.dart';
 import 'dart:async';
 import 'constants.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class Otp extends StatefulWidget {
   final String email;
@@ -78,6 +79,7 @@ class _OtpScreenState extends State<Otp> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    var lang = AppLocalizations.of(context)!;
     return Scaffold(
       body: Container(
         height: MediaQuery.of(context).size.height,
@@ -94,8 +96,8 @@ class _OtpScreenState extends State<Otp> with SingleTickerProviderStateMixin {
                   fit: BoxFit.contain,
                 ),
                 const SizedBox(height: 20),
-                const Text(
-                  'OTP Verification',
+                 Text(
+                  lang.otpVerification,
                   style: TextStyle(
                     color: AppColors.white,
                     fontSize: 24,
@@ -151,7 +153,7 @@ class _OtpScreenState extends State<Otp> with SingleTickerProviderStateMixin {
                         _isVerifyEnabled ? Colors.blue : Colors.white,
                   ),
                   child: Text(
-                    'Verify',
+                   lang.verify,
                     style: TextStyle(
                       color: _isVerifyEnabled ? Colors.white : Colors.black,
                       fontSize: 16,
@@ -164,7 +166,7 @@ class _OtpScreenState extends State<Otp> with SingleTickerProviderStateMixin {
                   onPressed: _isResendEnabled ? _resendOtp : null,
                   child: Text(
                     _isResendEnabled
-                        ? "Resend OTP"
+                        ? lang.resendOtp
                         : "Resend in $_timeLeft sec",
                     style: TextStyle(
                       color: _isResendEnabled ? Colors.white : Colors.grey,

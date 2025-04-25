@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'otp_screen.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CarSettingsScreen extends StatefulWidget {
   static const String routeName = "carSettings";
@@ -55,10 +56,11 @@ class _CarSettingsScreenState extends State<CarSettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var lang = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: AppBar(
-        title: Text('Car Settings',
+        title: Text(lang.carSettings,
             style: TextStyle(color: textColor, fontWeight: FontWeight.bold)),
         backgroundColor: backgroundColor,
         elevation: 0,
@@ -85,9 +87,9 @@ class _CarSettingsScreenState extends State<CarSettingsScreen> {
                       Row(
                         children: [
                           Icon(Icons.numbers, color: accentColor),
-                          const SizedBox(width: 10),
+                           SizedBox(width: 10),
                           Text(
-                            'Car Number Type',
+                           lang.carNumberType ,
                             style: TextStyle(
                               color: textColor,
                               fontSize: 18,
@@ -121,7 +123,7 @@ class _CarSettingsScreenState extends State<CarSettingsScreen> {
                                 ),
                                 child: Center(
                                   child: Text(
-                                    'Numbers Only',
+                                    lang.numbersOnly,
                                     style: TextStyle(
                                       color: _isNumbersOnly
                                           ? Colors.white
@@ -156,7 +158,7 @@ class _CarSettingsScreenState extends State<CarSettingsScreen> {
                                 ),
                                 child: Center(
                                   child: Text(
-                                    'Letters & Numbers',
+                                    lang.lettersAndNumbers,
                                     style: TextStyle(
                                       color: !_isNumbersOnly
                                           ? Colors.white
@@ -193,7 +195,7 @@ class _CarSettingsScreenState extends State<CarSettingsScreen> {
                             Icon(Icons.numbers, color: accentColor),
                             const SizedBox(width: 10),
                             Text(
-                              'Car Number',
+                              lang.carNumber,
                               style: TextStyle(
                                 color: textColor,
                                 fontSize: 16,
@@ -206,7 +208,7 @@ class _CarSettingsScreenState extends State<CarSettingsScreen> {
                         TextFormField(
                           style: TextStyle(color: textColor),
                           decoration: InputDecoration(
-                            hintText: 'Enter Plate Number',
+                            hintText: lang.enterPlateNumber,
                             hintStyle:
                                 TextStyle(color: Colors.grey.withOpacity(0.5)),
                             enabledBorder: OutlineInputBorder(
@@ -225,10 +227,10 @@ class _CarSettingsScreenState extends State<CarSettingsScreen> {
                           maxLength: 7,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please enter numbers';
+                              return lang.pleaseEnterNumbers;
                             }
                             if ((value.length <= 1 && value.length <= 7)) {
-                              return 'Must be at least 1 Number and max 7 digits';
+                              return lang.mustBeAtLeast1NumberAndMax7Digits;
                             }
                             return null;
                           },
@@ -257,9 +259,9 @@ class _CarSettingsScreenState extends State<CarSettingsScreen> {
                             Row(
                               children: [
                                 Icon(Icons.text_fields, color: accentColor),
-                                const SizedBox(width: 10),
+                                 SizedBox(width: 10),
                                 Text(
-                                  'Letters',
+                                  lang.letters,
                                   style: TextStyle(
                                     color: textColor,
                                     fontSize: 16,
@@ -309,7 +311,7 @@ class _CarSettingsScreenState extends State<CarSettingsScreen> {
                                     },
                                     validator: (value) {
                                       if (value == null || value.isEmpty) {
-                                        return 'Required';
+                                        return lang.required;
                                       }
                                       return null;
                                     },
@@ -353,7 +355,7 @@ class _CarSettingsScreenState extends State<CarSettingsScreen> {
                                     },
                                     validator: (value) {
                                       if (value == null || value.isEmpty) {
-                                        return 'Required';
+                                        return lang.required;
                                       }
                                       return null;
                                     },
@@ -397,7 +399,7 @@ class _CarSettingsScreenState extends State<CarSettingsScreen> {
                                     },
                                     validator: (value) {
                                       if (value == null || value.isEmpty) {
-                                        return 'Required';
+                                        return lang.required;
                                       }
                                       return null;
                                     },
@@ -428,7 +430,7 @@ class _CarSettingsScreenState extends State<CarSettingsScreen> {
                                 Icon(Icons.numbers, color: accentColor),
                                 const SizedBox(width: 10),
                                 Text(
-                                  'Plate Numbers',
+                                  lang.plateNumbers,
                                   style: TextStyle(
                                     color: textColor,
                                     fontSize: 16,
@@ -442,7 +444,7 @@ class _CarSettingsScreenState extends State<CarSettingsScreen> {
                               focusNode: _numbersFocus,
                               style: TextStyle(color: textColor),
                               decoration: InputDecoration(
-                                hintText: 'Enter Plate Number',
+                                hintText: lang.enterPlateNumber,
                                 hintStyle: TextStyle(
                                     color: Colors.grey.withOpacity(0.5)),
                                 enabledBorder: OutlineInputBorder(
@@ -461,10 +463,10 @@ class _CarSettingsScreenState extends State<CarSettingsScreen> {
                               maxLength: 7,
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
-                                  return 'Please enter numbers';
+                                  return lang.pleaseEnterNumbers;
                                 }
                                 if ((value.length <= 1 && value.length <= 7)) {
-                                  return 'Must be at least 1 Number and max 7 digits';
+                                  return lang.mustBeAtLeast1NumberAndMax7Digits;
                                 }
                                 return null;
                               },
@@ -494,9 +496,9 @@ class _CarSettingsScreenState extends State<CarSettingsScreen> {
                       Row(
                         children: [
                           Icon(Icons.color_lens, color: accentColor),
-                          const SizedBox(width: 10),
+                           SizedBox(width: 10),
                           Text(
-                            'Car Color',
+                            lang.carColor,
                             style: TextStyle(
                               color: textColor,
                               fontSize: 16,
@@ -509,7 +511,7 @@ class _CarSettingsScreenState extends State<CarSettingsScreen> {
                       TextFormField(
                         style: TextStyle(color: textColor),
                         decoration: InputDecoration(
-                          hintText: 'Enter car color',
+                          hintText: lang.enterCarColor,
                           hintStyle:
                               TextStyle(color: Colors.grey.withOpacity(0.5)),
                           enabledBorder: OutlineInputBorder(
@@ -526,7 +528,7 @@ class _CarSettingsScreenState extends State<CarSettingsScreen> {
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter car color';
+                            return lang.pleaseEnterCarColor;
                           }
                           return null;
                         },
@@ -556,7 +558,7 @@ class _CarSettingsScreenState extends State<CarSettingsScreen> {
                           Icon(Icons.directions_car, color: accentColor),
                           const SizedBox(width: 10),
                           Text(
-                            'Car Model',
+                            lang.carModel,
                             style: TextStyle(
                               color: textColor,
                               fontSize: 16,
@@ -569,7 +571,7 @@ class _CarSettingsScreenState extends State<CarSettingsScreen> {
                       TextFormField(
                         style: TextStyle(color: textColor),
                         decoration: InputDecoration(
-                          hintText: 'Enter car model',
+                          hintText: lang.enterCarModel,
                           hintStyle:
                               TextStyle(color: Colors.grey.withOpacity(0.5)),
                           enabledBorder: OutlineInputBorder(
@@ -586,7 +588,7 @@ class _CarSettingsScreenState extends State<CarSettingsScreen> {
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter car model';
+                            return lang.pleaseEnterCarModel;
                           }
                           return null;
                         },
@@ -613,7 +615,7 @@ class _CarSettingsScreenState extends State<CarSettingsScreen> {
                       ),
                     ),
                     child: Text(
-                      'Sign up',
+                     lang.signUp,
                       style: TextStyle(
                         fontSize: 18,
                         color: textColor,

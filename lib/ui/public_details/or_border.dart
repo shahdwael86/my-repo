@@ -2,11 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:road_helperr/utils/app_colors.dart';
 import 'package:road_helperr/utils/text_strings.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 class OrBorder extends StatelessWidget {
   const OrBorder({super.key});
 
   @override
   Widget build(BuildContext context) {
+
+    var lang = AppLocalizations.of(context)!;
     return Column(
       children: [
         Row(
@@ -23,7 +27,7 @@ class OrBorder extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
               child: Text(
-                TextStrings.or,
+                lang.or,
                 style: Theme.of(context)
                     .textTheme
                     .titleLarge!

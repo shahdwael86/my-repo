@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:road_helperr/ui/public_details/validation_form.dart';
 import 'package:road_helperr/utils/app_colors.dart' as colo;
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SignupScreen extends StatefulWidget {
   static const String routeName = "signupscreen";
@@ -13,6 +14,7 @@ class SignupScreen extends StatefulWidget {
 class _SignupScreenState extends State<SignupScreen> {
   @override
   Widget build(BuildContext context) {
+    var lang = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: colo.AppColors.primaryColor,
       body: Stack(

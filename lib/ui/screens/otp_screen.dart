@@ -2,6 +2,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:road_helperr/ui/screens/bottomnavigationbar_screes/home_screen.dart';
 import 'package:road_helperr/ui/screens/otp_expired_screen.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class OtpScreen extends StatefulWidget {
   static const String routeName = "otpscreen";
@@ -60,8 +62,7 @@ class _OtpScreenState extends State<OtpScreen> {
   }
 
   void _navigateToTimeoutScreen() {
-    if (mounted) {
-      Navigator.push(
+    if (mounted) {Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => const OtpExpiredScreen()),
       );
@@ -82,6 +83,7 @@ class _OtpScreenState extends State<OtpScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var lang = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
       resizeToAvoidBottomInset: false,
@@ -155,8 +157,9 @@ class _OtpScreenState extends State<OtpScreen> {
   }
 
   Widget _buildVerificationText() {
+    var lang = AppLocalizations.of(context)!;
     return Text(
-      "We have sent a verification\ncode to the email\n\"A**@gmail.com\"",
+      lang.weHaveSentAVerificationCodeToTheEmailAgmailcom,
       style: TextStyle(
         fontSize: MediaQuery.of(context).size.width * 0.04,
         fontWeight: FontWeight.w500,
@@ -210,6 +213,7 @@ class _OtpScreenState extends State<OtpScreen> {
   }
 
   Widget _buildTimer() {
+    var lang = AppLocalizations.of(context)!;
     return Text(
       "00:${_remainingTime.toString().padLeft(2, '0')}",
       style: const TextStyle(
@@ -218,6 +222,7 @@ class _OtpScreenState extends State<OtpScreen> {
   }
 
   Widget _buildButtons() {
+    var lang = AppLocalizations.of(context)!;
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
         backgroundColor: AppColors.primaryButtonColor,
@@ -232,15 +237,15 @@ class _OtpScreenState extends State<OtpScreen> {
           Navigator.pushNamed(context, HomeScreen.routeName);
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text("All fields must be filled out ",
+             SnackBar(
+              content: Text(lang.allFieldsMustBeFilledOut,
                   textAlign: TextAlign.center),
               backgroundColor: Colors.grey,
             ),
           );
         }
       },
-      child: const Text("Verify",
+      child: Text(lang.verify,
           style: TextStyle(fontSize: 18, color: Colors.white)),
     );
   }

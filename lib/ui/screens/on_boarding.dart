@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
+// import 'package:geolocator/geolocator.dart';
 import 'signin_screen.dart';
 import 'signupScreen.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class OnBoarding extends StatefulWidget {
   static const String routeName = "onboarding";
@@ -15,36 +16,37 @@ class _OnBoardingState extends State<OnBoarding> {
   @override
   void initState() {
     super.initState();
-    _checkLocationPermission();
+   // _checkLocationPermission();
   }
 
-  Future<void> _checkLocationPermission() async {
-    bool isLocationEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!isLocationEnabled) {
-      _showLocationDisabledMessage();
-    } else {
-      LocationPermission permission = await Geolocator.checkPermission();
-      if (permission == LocationPermission.denied ||
-          permission == LocationPermission.deniedForever) {
-        permission = await Geolocator.requestPermission();
-        if (permission == LocationPermission.denied ||
-            permission == LocationPermission.deniedForever) {
-          _showLocationDisabledMessage();
-        }
-      }
-    }
-  }
+  // Future<void> _checkLocationPermission() async {
+  //   bool isLocationEnabled = await Geolocator.isLocationServiceEnabled();
+  //   if (!isLocationEnabled) {
+  //     _showLocationDisabledMessage();
+  //   } else {
+  //     LocationPermission permission = await Geolocator.checkPermission();
+  //     if (permission == LocationPermission.denied ||
+  //         permission == LocationPermission.deniedForever) {
+  //       permission = await Geolocator.requestPermission();
+  //       if (permission == LocationPermission.denied ||
+  //           permission == LocationPermission.deniedForever) {
+  //         _showLocationDisabledMessage();
+  //       }
+  //     }
+  //   }
+  // }
 
   void _showLocationDisabledMessage() {
+    var lang = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Location Required'),
-        content: const Text('Please enable location services to continue.'),
+        title:  Text(lang.locationRequired),
+        content:  Text(lang.pleaseEnableLocationServicesToContinue),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('OK'),
+            child:  Text(lang.ok),
           ),
         ],
       ),
@@ -53,6 +55,7 @@ class _OnBoardingState extends State<OnBoarding> {
 
   @override
   Widget build(BuildContext context) {
+    var lang = AppLocalizations.of(context)!;
     return LayoutBuilder(
       builder: (context, constraints) {
         final size = MediaQuery.of(context).size;
@@ -100,7 +103,7 @@ class _OnBoardingState extends State<OnBoarding> {
                                   ),
                                   _AdaptiveText(
                                     text:
-                                        "If you've got the time,\nwe've got the shine",
+                                        lang.ifYouveGotTheTimeWeveGotTheShine,
                                     style: TextStyle(
                                       fontSize: responsive.titleSize,
                                       color: Colors.white,
@@ -110,7 +113,7 @@ class _OnBoardingState extends State<OnBoarding> {
                                   ),
                                   _AdaptiveText(
                                     text:
-                                        "JUST THE PROTECTION\nYOU and your CAR NEED\nSPEAK TO US FOR BEST SERVICES",
+                                        lang.justTheProtectionYouAndYourCarNeedSpeakToUsForBestServices,
                                     style: TextStyle(
                                       fontSize: responsive.subtitleSize,
                                       color: const Color(0xFFD6D1D1),
@@ -275,6 +278,7 @@ class _AdaptiveButtonRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var lang = AppLocalizations.of(context)!;
     return Wrap(
       spacing: spacing,
       runSpacing: spacing,
@@ -282,14 +286,14 @@ class _AdaptiveButtonRow extends StatelessWidget {
       children: [
         _buildButton(
           context,
-          "Sign up",
+          lang.signUp,
           Colors.white,
           const Color(0xFF2C2C2C),
           onSignUpPressed,
         ),
         _buildButton(
           context,
-          "Sign in",
+          lang.signIn,
           const Color(0xFF02285E),
           Colors.white,
           onSignInPressed,

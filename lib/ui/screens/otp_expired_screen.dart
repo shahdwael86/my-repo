@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:road_helperr/ui/screens/otp_screen.dart';
 import 'package:road_helperr/ui/screens/signin_screen.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class OtpExpiredScreen extends StatefulWidget {
   static const String routeName = "otpexpired";
@@ -39,6 +40,7 @@ class _OtpExpiredScreenState extends State<OtpExpiredScreen>
 
   @override
   Widget build(BuildContext context) {
+    var lang = AppLocalizations.of(context)!;
     return LayoutBuilder(
       builder: (context, constraints) {
         final responsive = ResponsiveHelper(
@@ -93,10 +95,11 @@ class _OtpExpiredScreenState extends State<OtpExpiredScreen>
   }
 
   Widget _buildErrorMessage(ResponsiveHelper responsive) {
+    var lang = AppLocalizations.of(context)!;
     return FadeTransition(
       opacity: _fadeAnimation,
       child: AdaptiveText(
-        'The OTP has expired!',
+        lang.theOtpHasExpired,
         style: TextStyle(
           color: Colors.white,
           fontSize: responsive.titleSize,
@@ -108,10 +111,11 @@ class _OtpExpiredScreenState extends State<OtpExpiredScreen>
   }
 
   Widget _buildRequestOtpButton(ResponsiveHelper responsive) {
+    var lang = AppLocalizations.of(context)!;
     return FadeTransition(
       opacity: _fadeAnimation,
       child: AdaptiveButton(
-        text: 'Request OTP',
+        text:lang.requestOtp ,
         onPressed: () {
           Navigator.of(context).pushNamed(OtpScreen.routeName);
         },
@@ -126,6 +130,7 @@ class _OtpExpiredScreenState extends State<OtpExpiredScreen>
   }
 
   Widget _buildBackToLoginButton(ResponsiveHelper responsive) {
+    var lang = AppLocalizations.of(context)!;
     return FadeTransition(
       opacity: _fadeAnimation,
       child: TextButton(
@@ -137,7 +142,7 @@ class _OtpExpiredScreenState extends State<OtpExpiredScreen>
           padding: EdgeInsets.all(responsive.padding * 0.5),
         ),
         child: Text(
-          'Back to Login',
+          lang.backToLogin,
           style: TextStyle(
             color: Colors.blue,
             fontSize: responsive.buttonFontSize,

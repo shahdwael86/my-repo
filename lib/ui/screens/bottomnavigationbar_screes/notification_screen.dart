@@ -7,6 +7,7 @@ import 'package:road_helperr/ui/screens/bottomnavigationbar_screes/profile_scree
 import 'package:road_helperr/utils/text_strings.dart';
 import '../../../utils/app_colors.dart';
 import 'home_screen.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class NotificationScreen extends StatefulWidget {
   static const String routeName = "notification";
@@ -70,7 +71,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
     double navBarHeight,
     double spacing,
     bool isDesktop,
-  ) {
+  ) {var lang = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppColors.cardColor,
       appBar: AppBar(
@@ -84,7 +85,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
-          TextStrings.notify,
+         lang.noNotifications,
           style: TextStyle(
             color: Colors.white,
             fontSize: titleSize,
@@ -94,7 +95,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
           TextButton(
             onPressed: () {},
             child: Text(
-              TextStrings.clear,
+             lang.clearAll ,
               style: TextStyle(
                 color: AppColors.switchColor,
                 fontSize: subtitleSize,
@@ -119,7 +120,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
     double navBarHeight,
     double spacing,
     bool isDesktop,
-  ) {
+  ) {var lang = AppLocalizations.of(context)!;
     return CupertinoPageScaffold(
       backgroundColor: AppColors.cardColor,
       navigationBar: CupertinoNavigationBar(
@@ -134,7 +135,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
           onPressed: () => Navigator.pop(context),
         ),
         middle: Text(
-          TextStrings.notify,
+         lang.noNotifications,
           style: TextStyle(
             color: Colors.white,
             fontSize: titleSize,
@@ -144,7 +145,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
         trailing: CupertinoButton(
           padding: EdgeInsets.zero,
           child: Text(
-            TextStrings.clear,
+          lang.clearAll,
             style: TextStyle(
               color: AppColors.switchColor,
               fontSize: subtitleSize,
@@ -179,7 +180,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
     final platform = Theme.of(context).platform;
     final isIOS =
         platform == TargetPlatform.iOS || platform == TargetPlatform.macOS;
-
+    var lang = AppLocalizations.of(context)!;
     return Center(
       child: Container(
         constraints: BoxConstraints(
@@ -196,7 +197,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
             ),
             SizedBox(height: spacing),
             Text(
-              TextStrings.noNotify,
+             lang.noNotifications,
               style: TextStyle(
                 color: AppColors.switchColor,
                 fontSize: titleSize,
@@ -206,7 +207,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
             ),
             SizedBox(height: spacing * 0.5),
             Text(
-              TextStrings.notifyInbox,
+              lang.notificationInboxEmpty,
               style: TextStyle(
                 color: AppColors.switchColor,
                 fontSize: subtitleSize,
@@ -221,11 +222,17 @@ class _NotificationScreenState extends State<NotificationScreen> {
   }
 
   Widget _buildMaterialNavBar(
+
+
+
     BuildContext context,
     double iconSize,
     double navBarHeight,
     bool isDesktop,
   ) {
+
+    var lang = AppLocalizations.of(context)!;
+
     return Container(
       constraints: BoxConstraints(
         maxWidth: isDesktop ? 1200 : double.infinity,
@@ -260,6 +267,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
     double navBarHeight,
     bool isDesktop,
   ) {
+    var lang = AppLocalizations.of(context)!;
     return Container(
       constraints: BoxConstraints(
         maxWidth: isDesktop ? 1200 : double.infinity,
@@ -273,23 +281,23 @@ class _NotificationScreenState extends State<NotificationScreen> {
         items: [
           BottomNavigationBarItem(
             icon: Icon(CupertinoIcons.home, size: iconSize),
-            label: 'Home',
+            label: lang.home,
           ),
           BottomNavigationBarItem(
             icon: Icon(CupertinoIcons.location, size: iconSize),
-            label: 'Map',
+            label: lang.map,
           ),
           BottomNavigationBarItem(
             icon: Icon(CupertinoIcons.chat_bubble, size: iconSize),
-            label: 'Chat',
+            label: lang.chat,
           ),
           BottomNavigationBarItem(
             icon: Icon(CupertinoIcons.bell, size: iconSize),
-            label: 'Notifications',
+            label: lang.noNotifications,
           ),
           BottomNavigationBarItem(
             icon: Icon(CupertinoIcons.person, size: iconSize),
-            label: 'Profile',
+            label:lang.profile,
           ),
         ],
         onTap: (index) {

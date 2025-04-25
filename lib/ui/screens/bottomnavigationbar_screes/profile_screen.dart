@@ -7,6 +7,7 @@ import 'package:road_helperr/ui/screens/profile_screen.dart';
 import '../../../utils/app_colors.dart';
 import 'home_screen.dart';
 import 'notification_screen.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ProfileScreen extends StatelessWidget {
   static const String routeName = "profile";
@@ -62,10 +63,11 @@ class ProfileScreen extends StatelessWidget {
     double navBarHeight,
     bool isDesktop,
   ) {
+    var lang = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Profile Screen',
+          lang.profileScreen,
           style: TextStyle(
             fontSize: titleSize,
             fontWeight: FontWeight.w500,
@@ -95,11 +97,11 @@ class ProfileScreen extends StatelessWidget {
     double iconSize,
     double navBarHeight,
     bool isDesktop,
-  ) {
+  ) { var lang = AppLocalizations.of(context)!;
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
         middle: Text(
-          'Profile Screen',
+          lang.profileScreen,
           style: TextStyle(
             fontSize: titleSize,
             fontFamily: '.SF Pro Text',
@@ -178,6 +180,7 @@ class ProfileScreen extends StatelessWidget {
     double navBarHeight,
     bool isDesktop,
   ) {
+    var lang = AppLocalizations.of(context)!;
     return Container(
       constraints: BoxConstraints(
         maxWidth: isDesktop ? 1200 : double.infinity,
@@ -191,23 +194,23 @@ class ProfileScreen extends StatelessWidget {
         items: [
           BottomNavigationBarItem(
             icon: Icon(CupertinoIcons.home, size: iconSize),
-            label: 'Home',
+            label: lang.home,
           ),
           BottomNavigationBarItem(
             icon: Icon(CupertinoIcons.location, size: iconSize),
-            label: 'Map',
+            label:lang.map,
           ),
           BottomNavigationBarItem(
             icon: Icon(CupertinoIcons.chat_bubble, size: iconSize),
-            label: 'Chat',
+            label:lang.chat,
           ),
           BottomNavigationBarItem(
             icon: Icon(CupertinoIcons.bell, size: iconSize),
-            label: 'Notifications',
+            label: lang.noNotifications,
           ),
           BottomNavigationBarItem(
             icon: Icon(CupertinoIcons.person, size: iconSize),
-            label: 'Profile',
+            label: lang.profile,
           ),
         ],
         onTap: (index) => _handleNavigation(context, index),

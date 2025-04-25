@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 import 'on_boarding.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class OnboardingScreen extends StatefulWidget {
   static const String routeName = "onvideo";
@@ -247,6 +248,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
   }
 
   Widget _buildGetStartedButton(double fontSize, Size size) {
+    var lang = AppLocalizations.of(context)!;
     return Align(
       alignment: Alignment.bottomCenter,
       child: Padding(
@@ -269,7 +271,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
               ),
             ),
             child: Text(
-              'Get Started',
+              lang.getStarted,
               style: TextStyle(
                 fontSize: fontSize,
                 fontWeight: FontWeight.bold,

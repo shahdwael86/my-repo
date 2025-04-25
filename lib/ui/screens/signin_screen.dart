@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:road_helperr/ui/screens/bottomnavigationbar_screes/home_screen.dart';
 import 'package:road_helperr/ui/screens/email_screen.dart';
 import 'package:road_helperr/ui/screens/signupScreen.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 class SignInScreen extends StatefulWidget {
   static const String routeName = "signinscreen";
 
@@ -51,7 +51,11 @@ class _SignInScreenState extends State<SignInScreen> {
 
   @override
   Widget build(BuildContext context) {
+
+    var lang = AppLocalizations.of(context)!;
+
     var mediaQuery = MediaQuery.of(context).size;
+    //var lang = AppLocalizations.of(context);
 
     return Scaffold(
       backgroundColor: const Color(0xFF1F3551),
@@ -85,11 +89,11 @@ class _SignInScreenState extends State<SignInScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const Padding(
+                     Padding(
                       padding: EdgeInsets.all(20),
                       child: Text(
-                        "Welcome Back!",
-                        style: TextStyle(
+                        lang.welcomeBack,
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
@@ -100,16 +104,16 @@ class _SignInScreenState extends State<SignInScreen> {
                     // Email Input
                     InputField(
                       icon: Icons.email_outlined,
-                      hintText: "Enter your email",
-                      label: "Email",
+                      hintText: lang.enterYourEmail,
+                      label: lang.email,
                       validatorIsContinue: (emailText) {
                         final regExp = RegExp(
                             r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
                         if (emailText == null || emailText.isEmpty) {
-                          return "Please enter your email";
+                          return lang.pleaseEnterYourEmail;
                         }
                         if (!regExp.hasMatch(emailText)) {
-                          return "Please enter a valid email";
+                          return lang.pleaseEnterAValidEmail;
                         }
                         return null;
                       },
@@ -119,15 +123,15 @@ class _SignInScreenState extends State<SignInScreen> {
                     // Password Input
                     InputField(
                       icon: Icons.lock,
-                      hintText: "Enter your password",
-                      label: "Password",
+                      hintText: lang.enterYourPassword,
+                      label: lang.password,
                       isPassword: true,
                       validatorIsContinue: (passwordText) {
                         if (passwordText == null || passwordText.isEmpty) {
-                          return "Please enter your password";
+                          return lang.pleaseEnterYourPassword;
                         }
                         if (passwordText.length < 6) {
-                          return "Password must be at least 6 characters";
+                          return lang.passwordMustBeAtLeast6Characters;
                         }
                         return null;
                       },
@@ -153,8 +157,8 @@ class _SignInScreenState extends State<SignInScreen> {
                                     WidgetStateProperty.all(Colors.white),
                                 checkColor: const Color(0xFF1F3551),
                               ),
-                              const Text(
-                                "Remember me",
+                               Text(
+                               lang.rememberMe ,
                                 style: TextStyle(color: Colors.white),
                               ),
                             ],
@@ -164,8 +168,8 @@ class _SignInScreenState extends State<SignInScreen> {
                               Navigator.of(context)
                                   .pushNamed(EmailScreen.routeName);
                             },
-                            child: const Text(
-                              "Forgot Password?",
+                            child:  Text(
+                              lang.forgotPassword,
                               style: TextStyle(color: Colors.white),
                             ),
                           ),
@@ -177,7 +181,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     Padding(
                       padding: const EdgeInsets.all(20),
                       child: MainButton(
-                        textButton: "Login",
+                        textButton: lang.login,
                         onPress: () {
                           if (_formKey.currentState!.validate()) {
                             _saveUserData();
@@ -196,18 +200,18 @@ class _SignInScreenState extends State<SignInScreen> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Text(
-                            "Don't have an account? ",
-                            style: TextStyle(color: Colors.white),
+                           Text(
+                           lang.dontHaveAnAccount,
+                            style: const TextStyle(color: Colors.white),
                           ),
                           TextButton(
                             onPressed: () {
                               Navigator.of(context)
                                   .pushNamed(SignupScreen.routeName);
                             },
-                            child: const Text(
-                              "Register",
-                              style: TextStyle(
+                            child:  Text(
+                              lang.register,
+                              style: const TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
                               ),

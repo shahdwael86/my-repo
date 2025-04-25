@@ -6,6 +6,8 @@ import 'package:road_helperr/utils/app_colors.dart';
 import 'package:road_helperr/utils/text_strings.dart';
 import 'package:road_helperr/utils/responsive_helper.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 class AiButton extends StatelessWidget {
   const AiButton({super.key});
 
@@ -100,15 +102,17 @@ class AiButton extends StatelessWidget {
 
   // بناء الـ slider المتكيف مع المنصة
   Widget _buildAdaptiveSlider(
+
+
     BuildContext context,
     TargetPlatform platform,
     _Dimensions dimensions,
-  ) {
+  ) { var lang = AppLocalizations.of(context)!;
     // تخصيص الألوان والتأثيرات حسب المنصة
     final gradientColors = _getPlatformGradientColors(platform);
     final backgroundColor = _getPlatformBackgroundColor(platform);
     return GradientSlideToAct(
-      text: TextStrings.getStarted,
+      text: lang.getStarted,
       sliderButtonIcon: _getPlatformIcon(platform),
       textStyle: _getAdaptiveTextStyle(context, platform, dimensions.fontSize),
       backgroundColor: backgroundColor,

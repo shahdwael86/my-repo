@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:geolocator/geolocator.dart';
+// import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:road_helperr/ui/screens/bottomnavigationbar_screes/profile_screen.dart';
@@ -10,6 +10,8 @@ import '../../../utils/app_colors.dart';
 import '../ai_welcome_screen.dart';
 import 'home_screen.dart';
 import 'notification_screen.dart';
+
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MapScreen extends StatefulWidget {
   static const String routeName = "map";
@@ -36,64 +38,65 @@ class _MapScreenState extends State<MapScreen> {
     // Get filter options from HomeScreen
     _filters = ModalRoute.of(context)!.settings.arguments as Map<String, bool>?;
     print("Received Filters: $_filters"); // Print received filters
-    _getCurrentLocation();
+   // _getCurrentLocation();
   }
 
   // Function to get current location
-  Future<void> _getCurrentLocation() async {
-    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      // Location services are not enabled, show a message to the user
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Location services are disabled.')),
-      );
-      return;
-    }
-
-    LocationPermission permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        // Permissions are denied, show a message to the user
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Location permissions are denied.')),
-        );
-        return;
-      }
-    }
-
-    if (permission == LocationPermission.deniedForever) {
-      // Permissions are permanently denied, show a message to the user
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Location permissions are permanently denied.'),
-        ),
-      );
-      return;
-    }
-
-    // Get the current position
-    Position position = await Geolocator.getCurrentPosition();
-    setState(() {
-      _currentLocation = LatLng(position.latitude, position.longitude);
-      _isLoading = false; // Stop loading
-    });
-
-    // Fetch nearby places based on filters
-    if (_filters != null) {
-      _fetchNearbyPlaces(position.latitude, position.longitude);
-    }
-  }
+  // Future<void> _getCurrentLocation() async {
+  //   bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+  //   if (!serviceEnabled) {
+  //     // Location services are not enabled, show a message to the user
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       const SnackBar(content: Text('Location services are disabled.')),
+  //     );
+  //     return;
+  //   }
+  //
+  //   LocationPermission permission = await Geolocator.checkPermission();
+  //   if (permission == LocationPermission.denied) {
+  //     permission = await Geolocator.requestPermission();
+  //     if (permission == LocationPermission.denied) {
+  //       // Permissions are denied, show a message to the user
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         const SnackBar(content: Text('Location permissions are denied.')),
+  //       );
+  //       return;
+  //     }
+  //   }
+  //
+  //   if (permission == LocationPermission.deniedForever) {
+  //     // Permissions are permanently denied, show a message to the user
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       const SnackBar(
+  //         content: Text('Location permissions are permanently denied.'),
+  //       ),
+  //     );
+  //     return;
+  //   }
+  //
+  //   // Get the current position
+  //   Position position = await Geolocator.getCurrentPosition();
+  //   setState(() {
+  //     _currentLocation = LatLng(position.latitude, position.longitude);
+  //     _isLoading = false; // Stop loading
+  //   });
+  //
+  //   // Fetch nearby places based on filters
+  //   if (_filters != null) {
+  //     _fetchNearbyPlaces(position.latitude, position.longitude);
+  //   }
+  // }
 
   // Function to fetch nearby places using Google Places API
-  Future<void> _fetchNearbyPlaces(double latitude, double longitude) async {
+  Future<void> _fetchNearbyPlaces(double latitude, double longitude, BuildContext context) async {
     // Convert filters to Google Places API types
+    var lang = AppLocalizations.of(context)!;
     List<String> selectedTypes = _filters!.entries
         .where((entry) => entry.value) // Only selected filters
         .map((entry) {
           switch (entry.key) {
             case 'homeGas':
-              return 'gas_station';
+              return lang.gasStation;
             case 'homePolice':
               return 'police';
             case 'homeFire':
@@ -213,10 +216,11 @@ class _MapScreenState extends State<MapScreen> {
     double navBarHeight,
     bool isDesktop,
   ) {
+    var lang = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Map Screen',
+          lang.mapScreen,
           style: TextStyle(
             fontSize: titleSize,
             fontWeight: FontWeight.w500,
@@ -254,10 +258,11 @@ class _MapScreenState extends State<MapScreen> {
     double navBarHeight,
     bool isDesktop,
   ) {
+    var lang = AppLocalizations.of(context)!;
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
         middle: Text(
-          'Map Screen',
+          lang.mapScreen,
           style: TextStyle(
             fontSize: titleSize,
             fontFamily: '.SF Pro Text',

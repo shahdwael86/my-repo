@@ -9,6 +9,7 @@ import '../screens/bottomnavigationbar_screes/profile_screen.dart';
 import 'package:road_helperr/utils/app_colors.dart';
 import 'package:road_helperr/utils/text_strings.dart';
 import '../public_details/card_chat.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AiChat extends StatelessWidget {
   static const String routeName = "ai chat";
@@ -57,12 +58,13 @@ class AiChat extends StatelessWidget {
                     ? 0.07
                     : 0.06);
 
+        var lang = AppLocalizations.of(context)!;
         return Scaffold(
           backgroundColor: AppColors.cardColor,
           appBar: AppBar(
             backgroundColor: AppColors.cardColor,
             title: Text(
-              TextStrings.appBarAiChat,
+              lang.aiChat,
               style: TextStyle(
                 color: Colors.white,
                 fontSize: titleSize,
@@ -107,14 +109,14 @@ class AiChat extends StatelessWidget {
                     child: SingleChildScrollView(
                       child: Column(
                         children: [
-                          const InfoCard(
-                            title: TextStrings.titleCard1,
-                            subtitle: TextStrings.subTitleCard1,
+                           InfoCard(
+                            title: lang.answerOfYourQuestions,
+                            subtitle: lang.justAskMeAnythingYouLike,
                           ),
                           SizedBox(height: spacing * 0.3),
-                          const InfoCard(
-                            title: TextStrings.titleCard2,
-                            subtitle: TextStrings.subTitleCard2,
+                           InfoCard(
+                            title: lang.availableForYouAllDay,
+                            subtitle: lang.feelFreeToAskAnytime,
                           ),
                         ],
                       ),
@@ -177,6 +179,8 @@ class AiChat extends StatelessWidget {
 
   Widget _buildChatInput(BuildContext context, Size size, double titleSize,
       double iconSize, TargetPlatform platform) {
+
+    var lang = AppLocalizations.of(context)!;
     return Padding(
       padding: EdgeInsets.symmetric(
         vertical: size.height * 0.02,
@@ -196,7 +200,7 @@ class AiChat extends StatelessWidget {
                       platform == TargetPlatform.iOS ? '.SF Pro Text' : null,
                 ),
                 decoration: InputDecoration(
-                  hintText: TextStrings.hintChatText,
+                  hintText: lang.askMeAnything,
                   hintStyle: TextStyle(
                     fontSize: titleSize * 0.8,
                     fontFamily:

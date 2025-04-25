@@ -23,8 +23,7 @@ class TextStrings {
   static const String hintChatText = 'Ask me any thing...';
   static const String appBarAiChat = "AI Chat";
   static const String homeYourLocation = 'Your Location \n Egypt';
-  static const String homeGetYouBack =
-      'Get you back \n on track with just a few taps';
+  static const String homeGetYouBack = 'Get you back \n on track with just a few taps';
   static const String homeGetYourService = 'Get your services';
   static const String homeGas = "gas station";
   static const String homePolice = "Police department";

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'edit_text_field.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class EditProfileScreen extends StatefulWidget {
   static const String routeName = "EditProfileScreen";
@@ -27,6 +28,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var lang = AppLocalizations.of(context)!;
     return LayoutBuilder(
       builder: (context, constraints) {
         final size = MediaQuery.of(context).size;
@@ -72,7 +74,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             elevation: 0,
             centerTitle: true,
             title: Text(
-              "Edit Profile",
+              lang.editProfile,
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
@@ -122,28 +124,28 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     ),
                   ),
                   SizedBox(height: size.height * 0.02),
-                  const EditTextField(
-                    label: "First Name",
+                  EditTextField(
+                    label: lang.firstName,
                     icon: Icons.person, // Use IconData here
                     iconSize: 16, // Smaller icon size
                   ),
-                  const EditTextField(
-                    label: "Last Name",
+                  EditTextField(
+                    label: lang.lastName,
                     icon: Icons.person, // Use IconData here
                     iconSize: 16, // Smaller icon size
                   ),
-                  const EditTextField(
-                    label: "Phone Number",
+                  EditTextField(
+                    label: lang.phoneNumber,
                     icon: Icons.phone, // Use IconData here
                     iconSize: 16, // Smaller icon size
                   ),
-                  const EditTextField(
-                    label: "Email",
+                   EditTextField(
+                    label: lang.email,
                     icon: Icons.email, // Use IconData here
                     iconSize: 16, // Smaller icon size
                   ),
-                  const EditTextField(
-                    label: "Password",
+                   EditTextField(
+                    label: lang.password,
                     icon: Icons.lock, // Use IconData here
                     iconSize: 16, // Smaller icon size
                     obscureText: true,
@@ -168,7 +170,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         ),
                         SizedBox(width: size.width * 0.02),
                         Text(
-                          "Car Settings",
+                          lang.carSettings,
                           style: GoogleFonts.roboto(
                               fontWeight: FontWeight.w400,
                               fontSize: titleSize * 0.7,
@@ -198,7 +200,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             backgroundColor: const Color(0xFF023A87),
                           ),
                           child: Text(
-                            "Update Changes",
+                            lang.updateChanges,
                             style: GoogleFonts.roboto(
                               fontWeight: FontWeight.w500,
                               fontSize: titleSize * 0.8,
@@ -218,6 +220,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   void carSettingsModalBottomSheet(BuildContext context) {
+    var lang = AppLocalizations.of(context)!;
     showModalBottomSheet(
       context: context,
       isScrollControlled: true, // Allow the bottom sheet to be scrollable
@@ -243,19 +246,19 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   child: Column(
                     children: [
                       _buildCarSettingInput(
-                          "Car Number",
+                          lang.carNumber,
                           "assets/images/car_number.png",
                           iconSize,
                           padding,
                           fontSize),
                       _buildCarSettingInput(
-                          "Car Color",
+                          lang.carColor,
                           "assets/images/car_color.png",
                           iconSize,
                           padding,
                           fontSize),
                       _buildCarSettingInput(
-                          "Car Kind",
+                          lang.carKind,
                           "assets/images/password_icon.png",
                           iconSize,
                           padding,

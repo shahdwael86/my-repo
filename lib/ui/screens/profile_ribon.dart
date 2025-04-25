@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ProfileRibon extends StatelessWidget {
   final String leadingIcon;
@@ -14,6 +15,7 @@ class ProfileRibon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var lang = AppLocalizations.of(context)!;
     return LayoutBuilder(
       builder: (context, constraints) {
         final size = MediaQuery.of(context).size;
@@ -93,3 +95,4 @@ class ProfileRibon extends StatelessWidget {
     );
   }
 }
+

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'sos_service.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class EmergencyContactsScreen extends StatefulWidget {
   static const String routeName = "EmergencyContacts";
@@ -15,9 +16,10 @@ class _EmergencyContactsScreenState extends State<EmergencyContactsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var lang = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text("جهات الاتصال الطارئة"),
+        title:  Text("جهات الاتصال الطارئة"),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

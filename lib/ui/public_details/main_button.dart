@@ -15,7 +15,7 @@ class MainButton extends StatelessWidget {
       child: ElevatedButton(
           onPressed: onPress,
           style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.basicButton,
+             backgroundColor: AppColors.basicButton,
               foregroundColor: AppColors.labelTextField),
           child: Text(
             textButton,

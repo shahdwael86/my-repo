@@ -5,36 +5,38 @@ plugins {
 }
 
 android {
-    namespace = "com.example.road_helperr"
-    compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    namespace "com.example.road_helperr"
+    compileSdk 35
+
+    defaultConfig {
+        applicationId "com.example.road_helperr"
+        minSdk 21
+        targetSdk 33
+        versionCode project.hasProperty("flutter.versionCode") ? project.property("flutter.versionCode").toInteger() : 1
+        versionName project.hasProperty("flutter.versionName") ? project.property("flutter.versionName") : "1.0.0"
+    }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8
-    }
-
-    defaultConfig {
-        applicationId = "com.example.road_helperr"
-        minSdkVersion flutter.minSdkVersion
-        targetSdkVersion flutter.targetSdkVersion
-        versionCode = project.hasProperty("flutter.versionCode") ? project.property("flutter.versionCode").toInteger() : 1
-        versionName = project.hasProperty("flutter.versionName") ? project.property("flutter.versionName") : "1.0.0"
+        jvmTarget = "1.8"
     }
 
     buildTypes {
         release {
-            signingConfig = signingConfigs.debug
+            signingConfig signingConfigs.debug
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             setProperty("archivesBaseName", "Road_Helper_v${defaultConfig.versionName}")
         }
     }
+
+    // ndkVersion ممكن إضافته فقط إذا كنت محتاجه فعلاً
+    // ndkVersion "25.1.8937393"
 }
 
 flutter {

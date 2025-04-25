@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'signin_screen.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class NewPasswordScreen extends StatefulWidget {
   const NewPasswordScreen({super.key});
@@ -152,6 +153,7 @@ class _NewPasswordScreenState extends State<NewPasswordScreen>
   }
 
   Widget _buildPasswordField(double maxWidth, bool isIOS) {
+    var lang = AppLocalizations.of(context)!;
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
@@ -164,7 +166,7 @@ class _NewPasswordScreenState extends State<NewPasswordScreen>
               onChanged: _validatePassword,
               style: const TextStyle(color: Colors.white),
               obscureText: _obscurePassword,
-              placeholder: 'New Password',
+              placeholder: lang.newPassword,
               placeholderStyle: TextStyle(color: Colors.white.withOpacity(0.5)),
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               decoration: BoxDecoration(
@@ -190,7 +192,7 @@ class _NewPasswordScreenState extends State<NewPasswordScreen>
               style: const TextStyle(color: Colors.white),
               obscureText: _obscurePassword,
               decoration: InputDecoration(
-                hintText: 'New Password',
+                hintText: lang.newPassword,
                 hintStyle: TextStyle(color: Colors.white.withOpacity(0.5)),
                 border: InputBorder.none,
                 contentPadding:
@@ -209,6 +211,7 @@ class _NewPasswordScreenState extends State<NewPasswordScreen>
   }
 
   Widget _buildConfirmPasswordField(double maxWidth, bool isIOS) {
+    var lang = AppLocalizations.of(context)!;
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
@@ -221,7 +224,7 @@ class _NewPasswordScreenState extends State<NewPasswordScreen>
               onChanged: _validateConfirmPassword,
               style: const TextStyle(color: Colors.white),
               obscureText: _obscureConfirmPassword,
-              placeholder: 'Rewrite New Password',
+              placeholder: lang.rewriteNewPassword,
               placeholderStyle: TextStyle(color: Colors.white.withOpacity(0.5)),
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               decoration: BoxDecoration(
@@ -247,7 +250,7 @@ class _NewPasswordScreenState extends State<NewPasswordScreen>
               style: const TextStyle(color: Colors.white),
               obscureText: _obscureConfirmPassword,
               decoration: InputDecoration(
-                hintText: 'Rewrite New Password',
+                hintText: lang.rewriteNewPassword,
                 hintStyle: TextStyle(color: Colors.white.withOpacity(0.5)),
                 border: InputBorder.none,
                 contentPadding:
@@ -268,6 +271,7 @@ class _NewPasswordScreenState extends State<NewPasswordScreen>
   }
 
   Widget _buildPasswordRequirements(double maxWidth, bool isIOS) {
+    var lang = AppLocalizations.of(context)!;
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(16),
@@ -285,9 +289,9 @@ class _NewPasswordScreenState extends State<NewPasswordScreen>
                 color: Colors.white.withOpacity(0.7),
                 size: 20,
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               Text(
-                'Password must have:',
+                lang.passwordMustHave,
                 style: TextStyle(
                   color: Colors.white.withOpacity(0.7),
                   fontSize: 14,
@@ -296,11 +300,11 @@ class _NewPasswordScreenState extends State<NewPasswordScreen>
             ],
           ),
           const SizedBox(height: 12),
-          _buildRequirement('One capital letter or more', hasUpperCase, isIOS),
+          _buildRequirement(lang.oneCapitalLetterOrMore, hasUpperCase, isIOS),
           _buildRequirement(
-              'One special character or more', hasSpecialChar, isIOS),
-          _buildRequirement('One number or more', hasNumber, isIOS),
-          _buildRequirement('Passwords match', passwordsMatch, isIOS),
+              lang.oneSpecialCharacterOrMore, hasSpecialChar, isIOS),
+          _buildRequirement(lang.oneNumberOrMore, hasNumber, isIOS),
+          _buildRequirement(lang.passwordsMatch, passwordsMatch, isIOS),
         ],
       ),
     );
@@ -334,6 +338,7 @@ class _NewPasswordScreenState extends State<NewPasswordScreen>
   }
 
   Widget _buildResetButton(double maxWidth, bool isIOS) {
+    var lang = AppLocalizations.of(context)!;
     return Container(
       width: double.infinity,
       height: 50,
@@ -360,8 +365,8 @@ class _NewPasswordScreenState extends State<NewPasswordScreen>
               child: isLoading
                   ? const CupertinoActivityIndicator(
                       color: CupertinoColors.white)
-                  : const Text(
-                      'Reset Password',
+                  :  Text(
+                      lang.resetPassword,
                       style: TextStyle(
                         color: CupertinoColors.white,
                         fontSize: 16,
@@ -389,8 +394,8 @@ class _NewPasswordScreenState extends State<NewPasswordScreen>
                         strokeWidth: 2,
                       ),
                     )
-                  : const Text(
-                      'Reset Password',
+                  :  Text(
+                      lang.resetPassword,
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
@@ -401,6 +406,7 @@ class _NewPasswordScreenState extends State<NewPasswordScreen>
   }
 
   void _showSuccessDialog() {
+    var lang = AppLocalizations.of(context)!;
     final isIOS = Theme.of(context).platform == TargetPlatform.iOS;
 
     if (isIOS) {
@@ -408,10 +414,10 @@ class _NewPasswordScreenState extends State<NewPasswordScreen>
         context: context,
         barrierDismissible: false,
         builder: (context) => CupertinoAlertDialog(
-          title: const Text('Success!'),
-          content: const Padding(
+          title: Text(lang.success),
+          content: Padding(
             padding: EdgeInsets.only(top: 8.0),
-            child: Text('Password reset successfully'),
+            child: Text(lang.passwordResetSuccessfully),
           ),
           actions: [
             CupertinoDialogAction(
@@ -424,7 +430,7 @@ class _NewPasswordScreenState extends State<NewPasswordScreen>
                   (Route<dynamic> route) => false,
                 );
               },
-              child: const Text('Done'),
+              child:  Text(lang.done),
             ),
           ],
         ),
@@ -465,8 +471,8 @@ class _NewPasswordScreenState extends State<NewPasswordScreen>
                   ),
                 ),
                 const SizedBox(height: 24),
-                const Text(
-                  'Success!',
+                 Text(
+                  lang.success,
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 24,
@@ -474,8 +480,8 @@ class _NewPasswordScreenState extends State<NewPasswordScreen>
                   ),
                 ),
                 const SizedBox(height: 8),
-                const Text(
-                  'Password reset successfully',
+                 Text(
+                  lang.passwordResetSuccessfully,
                   style: TextStyle(
                     color: Colors.grey,
                     fontSize: 16,
@@ -501,8 +507,8 @@ class _NewPasswordScreenState extends State<NewPasswordScreen>
                         (Route<dynamic> route) => false,
                       );
                     },
-                    child: const Text(
-                      'Done',
+                    child:  Text(
+                      lang.done,
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
