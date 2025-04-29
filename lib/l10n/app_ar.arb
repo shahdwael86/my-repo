@@ -168,8 +168,25 @@
   "pleaseSelectBetween1To3Services": "يرجى اختيار من خدمة إلى ثلاث خدمات.",
   "location": "الموقع",
   "mapScreen": "شاشة الخريطة",
-  "fetchingLocation": "جارٍ تحديد الموقع..."
+  "fetchingLocation": "جارٍ تحديد الموقع...",
+  "pleaseSelectAtLeastOneService": "يرجى اختيار خدمة واحدة على الأقل!",
+  "aboutUs": "معلومات عنا",
+  "emergencyServices": "خدمات الطوارئ",
+  "emergencyServicesDescription": "حدد بسرعة المستشفيات ومراكز الشرطة وجهات الاتصال في حالات الطوارئ القريبة",
+  "gasStations": "محطات الوقود",
 
+  "communityHelp": "مساعدة المجتمع",
 
+  "aboutTheApp": "حول التطبيق",
 
+  "Quickly locate nearby hospitals, police stations, and emergency contacts": "حدد بسرعة المستشفيات ومراكز الشرطة وجهات الاتصال في حالات الطوارئ القريبة",
+  "Find the nearest fuel stations with real-time availability information": "اعثر على أقرب محطة وقود مع معلومات التوفر في الوقت الفعلي",
+  "Request assistance from nearby users in case of emergencies": "اطلب المساعدة من المستخدمين القريبين في حالات الطوارئ",
+  "Our mission is to make your journeys safer and more convenient through innovative technology solutions.": "مهمتنا هي جعل رحلاتك أكثر أمانًا وراحة من خلال حلول تقنية مبتكرة.",
+  "The app combines real-time location services with AI to provide intelligent assistance when you need it most": "يجمع التطبيق بين خدمات تحديد الموقع في الوقت الفعلي والذكاء الاصطناعي لتقديم المساعدة الذكية عند الحاجة.",
+  "Contact: roadhelper200@gmail.com": "البريد الإلكتروني: roadhelper200@gmail.com",
+  "missionAndTechnologyDescription": "مهمتنا هي جعل رحلاتك أكثر أمانًا وراحة من خلال حلول تقنية مبتكرة.\nيجمع التطبيق بين خدمات تحديد الموقع في الوقت الفعلي والذكاء الاصطناعي لتقديم المساعدة الذكية عند الحاجة.",
+  "version": "الإصدار: 1.0.0",
+  "developer": "المطور: فريق مساعد الطريق",
+  "allRightsReserved": "جميع الحقوق محفوظة © 2025"
 }

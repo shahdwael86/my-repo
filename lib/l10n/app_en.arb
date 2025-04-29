@@ -171,5 +171,24 @@
   "pleaseSelectBetween1To3Services": "Please select between 1 to 3 services.",
   "location": "location",
   "mapScreen": "Map Screen",
-  "fetchingLocation": "Fetching location..."
+  "fetchingLocation": "Fetching location...",
+  "pleaseSelectAtLeastOneService": "Please select at least one service!",
+  "aboutUs": "About Us",
+  "emergencyServices": "Emergency Services",
+  "gasStations": "Gas Stations",
+  "communityHelp": "Community Help",
+  "aboutTheApp": "About the App",
+
+  "quicklyLocateNearbyHospitalsPoliceStationsAndEmergencyContacts": "quicklyLocateNearbyHospitalsPoliceStationsAndEmergencyContacts",
+  "findTheNearestFuelStationsWithRealTimeAvailabilityInformation": "findTheNearestFuelStationsWithRealTimeAvailabilityInformation",
+  "requestAssistanceFromNearbyUsersInCaseOfEmergencies": "requestAssistanceFromNearbyUsersInCaseOfEmergencies",
+  "ourMissionIsToMakeYourJourneysSaferAndMoreConvenientThroughInnovativeTechnologySolutions": "ourMissionIsToMakeYourJourneysSaferAndMoreConvenientThroughInnovativeTechnologySolutions",
+  "theAppCombinesRealTimeLocationServicesWithAiToProvideIntelligentAssistanceWhenYouNeedItMost": "theAppCombinesRealTimeLocationServicesWithAiToProvideIntelligentAssistanceWhenYouNeedItMost",
+  "contactRoadhelper200GmailCom": "contactRoadhelper200GmailCom",
+  "missionAndTechnologyDescription": "Our mission is to make your journeys safer and more convenient through innovative technology solutions.\nThe app combines real-time location services with AI to provide intelligent assistance when you need it most.",
+  "version": "Version: 1.0.0",
+  "developer": "Developer: Road Helper Team",
+  "allRightsReserved": "All rights reserved © 2025"
 }
+
+
