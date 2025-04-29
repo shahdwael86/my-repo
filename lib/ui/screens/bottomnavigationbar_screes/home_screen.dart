@@ -783,7 +783,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if (selectedKeys.isEmpty) {
       var lang = AppLocalizations.of(context)!;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Please select at least one service!")),
+         SnackBar(content: Text(lang.pleaseSelectAtLeastOneService)),
       );
       return;
     }
