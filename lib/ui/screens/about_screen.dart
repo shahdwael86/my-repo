@@ -76,21 +76,21 @@ class AboutScreen extends StatelessWidget {
                   _buildFeatureCard(
                     icon: Icons.medical_services,
                     title: lang.emergencyServices,
-                    content: lang.quicklyLocateNearbyHospitalsPoliceStationsAndEmergencyContacts,
+                    content: lang.emergencyServicesDescription,
                     isDarkMode: isDarkMode,
                   ),
                   const SizedBox(height: 16),
                   _buildFeatureCard(
                     icon: Icons.local_gas_station,
                     title: lang.gasStations,
-                    content: lang.findTheNearestFuelStationsWithRealTimeAvailabilityInformation,
+                    content: lang.gasStationsDescription,
                     isDarkMode: isDarkMode,
                   ),
                   const SizedBox(height: 16),
                   _buildFeatureCard(
                     icon: Icons.people,
                     title: lang.communityHelp,
-                    content: lang.requestAssistanceFromNearbyUsersInCaseOfEmergencies,
+                    content: lang.communityHelpDescription,
                     isDarkMode: isDarkMode,
                   ),
                    SizedBox(height: 24),
@@ -192,7 +192,7 @@ class AboutScreen extends StatelessWidget {
             onTap: _launchEmail,
             child: _buildInfoRow(
               Icons.email,
-             lang.contactRoadhelper200GmailCom,
+             lang.contactEmail,
               isDarkMode,
               isEmail: true,
             ),
