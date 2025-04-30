@@ -7,5 +7,6 @@ class Settingsprovider  extends ChangeNotifier {
     currentLocale = newLocale;
     notifyListeners();
 
+
   }
 }
